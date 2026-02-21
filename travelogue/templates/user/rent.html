@@ -1,0 +1,27 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+<div class="text-center container py-5">
+  <h2 class="heading-agileinfo text-center pb-4">Rent<span> Gallery</span></h2>
+  <section style="background-color: #eee;">
+    <div class="row">
+      {% for data in rentcart %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <input name="image" type="image" class="card-img-top"
+            src="{% if data.images %}{{ data.images.url }}{% endif %}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{data.productname}}</h5>
+            <p class="card-text text-muted">Club: {{data.club_name.clubname}}</p>
+            <p class="card-text text-muted">Location: {{data.club_name.location}}</p>
+            <p class="card-text text-muted">Phone: {{data.club_name.phonenumber}}</p>
+            <p class="card-text">Rent:{{data.rent}}</p>
+            <a href="/add_rentcart?id={{data.id}}&price={{data.rent}}" class="btn btn-danger">Order</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

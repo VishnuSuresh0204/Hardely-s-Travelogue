@@ -1,0 +1,65 @@
+{% extends 'commonpage.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Club Registration Form</h2>
+
+    <!-- Display messages -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div class="mb-3">
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <input type="email" name="email" class="form-control" placeholder="Email ID" required>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control" placeholder="Password" required
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                title="Password must have 8+ characters, uppercase, lowercase, number, and special character">
+        </div>
+
+        <!-- Club Name -->
+        <div class="mb-3">
+            <input type="text" name="clubname" class="form-control" placeholder="Club Name" required
+                pattern="[a-zA-Z ]+">
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <input type="text" name="location" class="form-control" placeholder="Location" required>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="mb-3">
+            <input type="text" name="phoneNum" class="form-control" placeholder="Phone Number" required minlength="10"
+                maxlength="10">
+        </div>
+
+        <!-- Profile Image -->
+        {% comment %} <div class="mb-3">
+            <label for="image">Profile Image</label>
+            <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+        </div> {% endcomment %}
+
+        <!-- Submit -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

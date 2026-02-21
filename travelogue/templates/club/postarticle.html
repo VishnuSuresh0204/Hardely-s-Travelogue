@@ -1,0 +1,30 @@
+{% extends 'club/commonpageclub.html'%}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">Write<span>new article</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                            <input type="text" name="articlename" placeholder="Heading" >
+                            
+                            <textarea type="text" name="article" placeholder="Write down article......."></textarea>
+                            
+                            <input type="submit" value="Post">
+                            <input type="reset" value="Clear">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

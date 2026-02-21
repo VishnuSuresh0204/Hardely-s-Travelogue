@@ -1,0 +1,106 @@
+{% extends 'club/commonpageclub.html' %}
+{% load static %}
+{% block content %}
+
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+
+<style type="text/css">
+    td,
+    th {
+        padding: 15px;
+        text-align: center;
+    }
+
+    table {
+        width: 90%;
+        margin: 50px auto;
+        border-collapse: collapse;
+        background: #222;
+        color: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #000;
+        color: #ebd231;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #333;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<div class="container-fluid py-5">
+    <h2 class="heading-agileinfo text-center pb-4">Rental<span> Requests</span></h2>
+
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Items</th>
+                <th>ID Proof</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>
+                    {{ order.user_login.username }}<br>
+                    {{ order.user_login.phonenumber }}
+                </td>
+                <td>
+                    {% for item in order.rentcart_set.all %}
+                    {{ item.product.productname }} ({{ item.rented_date }} to {{ item.return_date }})<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if order.file %}
+                    <a href="{{ order.file.url }}" target="_blank" class="btn btn-info">View ID Proof</a>
+                    {% else %}
+                    No Proof Uploaded
+                    {% endif %}
+                </td>
+                <td>₹{{ order.total }}</td>
+                <td>
+                    <a href="/acceptrent?id={{ order.id }}" class="btn btn-success">Approve</a>
+                    <a href="/rejectrent?id={{ order.id }}" class="btn btn-danger">Reject</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h4 class="text-center text-white">No pending rental requests.</h4>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var eventDateInputs = document.querySelectorAll('.rentdate');
+    var returnDateInputs = document.querySelectorAll('.returndate');
+    var today = new Date().toISOString().split('T')[0];
+
+    eventDateInputs.forEach(function (input) {
+      input.setAttribute('min', today);
+    });
+
+    returnDateInputs.forEach(function (input) {
+      input.setAttribute('min', today);
+    });
+
+    var form = document.querySelector('.contact-form');
+    form.addEventListener('submit', function (event) {
+      eventDateInputs.forEach(function (input) {
+        var selectedDate = new Date(input.value);
+        var currentDate = new Date();
+
+        // Set current date to start of day
+        currentDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate < currentDate) {
+          alert("Dates must be greater than or equal to today's date.");
+          event.preventDefault(); // Prevent form submission
+        }
+      });
+    });
+  });
+</script>
+
+<style type="text/css">
+  /* External CSS file recommended for better organization */
+  .card {
+    margin: 10px;
+    width: 300px;
+    float: left;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+
+  .row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: nowrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    justify-content: center;
+  }
+</style>
+
+<form method="post" class="contact-form" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div style="margin: 100px">
+    <div class="row">
+      {% if pdtt %}
+      {% for data in pdtt %}
+      <div class="card">
+        <img src="{% static 'media/' %}{{ data.images }}" class="card-img-top" alt="Product Image">
+        <div class="card-body">
+          <h5 class="card-title">{{ data.productname }}</h5>
+          <p class="card-text text-muted">Club: {{data.club_name.clubname}}</p>
+          <p class="card-text text-muted">Location: {{data.club_name.location}}</p>
+          <p class="card-text text-muted">Phone: {{data.club_name.phonenumber}}</p>
+          <p class="card-text">Rent: {{ data.rent }}</p>
+          <label for="proof{{ forloop.counter }}">Proof:</label>
+          <input type="file" name="file" class="form-control" id="proof" placeholder="Proof">
+          <label for="rentdate{{ forloop.counter }}">Rented Date:</label>
+          <input type="date" name="rentdate" class="form-control rentdate" id="rentdate" placeholder="Rented date">
+          <label for="returndate{{ forloop.counter }}">Return Date:</label>
+          <input type="date" name="returndate" class="form-control returndate" id="returndate"
+            placeholder="Return date">
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    <div class="text-center">
+      <button class="btn btn-danger" type="submit">Place order</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

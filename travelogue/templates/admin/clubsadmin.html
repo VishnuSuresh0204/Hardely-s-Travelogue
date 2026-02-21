@@ -1,0 +1,35 @@
+{% extends 'admin/commonpageadmin.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %} 
+	<script>alert('{{ message }}');</script>   
+ {% endfor %}
+<div class="text-center container py-5">
+    <h4 class="mt-4 mb-5"><strong>Clubs in our community</strong></h4>
+<section style=" padding:10px;">       
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th colspan="3">CLUBS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for data in clb %}
+                
+                <tr>
+                  <th scope="row">{{data.clubname}}</th>
+                  <td><a href="/clubviewadmin?name={{data.id}}" class="btn btn-danger">View</a></td>
+                  <td><a href="/removeclub?name={{data.id}}" class="btn btn-danger">Remove</a></td>
+                  <td><a href="/memberships?id={{data.id}}" class="btn btn-danger">Memberships</a></td>
+
+
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+
+</section>
+</div>
+{% endblock %}

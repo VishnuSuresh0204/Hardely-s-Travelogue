@@ -1,0 +1,28 @@
+{% extends "user/commonpageuser.html" %}
+{% load static %}
+{% block content %}
+{% for message in messages %} 
+  <script>alert('{{ message }}');</script>   
+{% endfor %} 
+
+<section class="contact py-lg-5">
+	<div class="container py-5">
+		<div class="title-section pb-sm-5 pb-3">
+		   <h2 class="heading-agileinfo text-center pb-4">Post<span> feedbacks</span></h2>
+		</div>
+		<div class="inner-sec-w3layouts-agileinfo">
+			<div class="contact_grid_right mt-5">
+					<div class="contact_left_grid">
+					 <form method="post">
+						 {% csrf_token %}					
+						<textarea type="text" name="feedback"  placeholder="Write your feedbacks......" required=""></textarea>
+						<input type="submit" value="Post">
+						{% comment %} <input type="reset" value="Clear"> {% endcomment %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+{% endblock %}

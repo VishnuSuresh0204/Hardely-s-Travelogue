@@ -1,0 +1,33 @@
+{% extends 'club/commonpageclub.html'%}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">edit<span> event</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                            <input type="text" name="event"value="{{event.name}}" placeholder="Event name" required="">
+                            <input type="text" name="startlocation"  value="{{event.starting_location}}" placeholder="starting location" required="">
+                            <input type="text" name="destination" value="{{event.destination}}" placeholder="Destination" required="">
+                            <input type="text" name="estimatedcost" placeholder="Estimated cost" value="{{event.estimated_cost}}" required="">
+                            <input type="date" name="date" placeholder="Date" value="{{event.date}}" required="">
+                            <label>{{event.date}}</label><br>
+                            
+                            <input type="submit" value="Save">
+                            <input type="reset" value="Clear">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

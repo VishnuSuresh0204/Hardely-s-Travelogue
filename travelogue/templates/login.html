@@ -1,0 +1,31 @@
+{% extends 'commonpage.html' %}
+{% load static %}
+{% block content %}
+  {% for message in messages %}
+    <script>
+      alert('{{ message }}')
+    </script>
+  {% endfor %}
+
+  <form method="post">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+      <div class="container py-5">
+        <div class="title-section pb-sm-5 pb-3">
+          <h2 class="heading-agileinfo text-center pb-4">Log<span>In</span></h2>
+        </div>
+        <div class="inner-sec-w3layouts-agileinfo">
+          <div class="contact_grid_right mt-5">
+            <div class="contact_left_grid">
+              <input type="email" name="email" placeholder="Email" required="" />
+              <input type="password" name="password" id="password" placeholder="password" required="" />
+              <input type="submit"  value="Login" />
+              {% comment %} <input type="reset" value="Clear" /> {% endcomment %}
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+{% endblock %}

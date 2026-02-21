@@ -1,0 +1,35 @@
+{% extends 'shop/commonpageshop.html'%}
+{% load static %}
+{% block content %}
+{% for message in messages %} 
+	<script>alert('{{ message }}');</script>   
+ {% endfor %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">add<span> sale products</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                            <input type="text" name="productname"  placeholder="Product name" >
+                            <!-- <input type="email" name="email" id="email" placeholder="email id" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                            <input  type="password" name="password" id="password" placeholder="password" required="" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."> -->
+                            <input type="tel" name="price"  placeholder="Price"  required>
+                            <input type="file" name="image" placeholder="Image"  required>
+                            <input type="number" name="stock"  placeholder="Stock" min="0" max="{{stock}}" required>
+                            
+                            <input type="submit" value="Add">
+                            <input type="reset" value="Clear">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

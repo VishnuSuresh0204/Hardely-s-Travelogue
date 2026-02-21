@@ -1,0 +1,39 @@
+{% extends 'commonpage.html'%}
+{% load static %}
+{% block content %}
+
+
+
+
+ <form method="post">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">registration<span>form</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                            <input type="text" name="username" id="username" placeholder="username" required="">
+                            <input class="form-control" type="email" name="email" id="email" placeholder="email id" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" >
+                            <input 
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            placeholder="Enter your password" 
+                            required 
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            title="Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character (e.g., @$!%*?&).">                            <input type="tel" name="phonenumber" id="phonenumber" placeholder="phone number" maxlength="10" pattern="[6-9][0-9]{9}" required="">
+                            <input type="text" name="shopname" id="shopname" placeholder="shop name" required="" pattern="[a-zA-Z ]+">
+                            <input type="text" name="location" id="location" placeholder="location of shop" required="">
+                            <input type="submit" value="Register">
+                            {% comment %} <input type="reset" value="Clear"> {% endcomment %}
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

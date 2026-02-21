@@ -1,0 +1,100 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<script>
+  alert('{{ message }}')
+</script>
+{% endfor %}
+
+<style type="text/css">
+  #log {
+    background-color: rgba(233, 98, 127, 0.89);
+    margin: 10px 150px;
+    padding: 50px;
+    color: white;
+    width: 1000px;
+    float: left;
+  }
+
+  td,
+  th {
+    padding: 10px;
+  }
+
+  #tbl {
+    width: 900px;
+  }
+
+  a {
+    color: #ebd231;
+  }
+
+  table {
+    border-collapse: collapse;
+    border: none;
+  }
+
+  th {
+    background-color: black;
+    color: #ebd231;
+  }
+
+  tr:nth-child(odd) {
+    background-color: silver;
+  }
+</style>
+<div>
+  <center>
+    <a href="/shopping" class="btn btn-danger">Continue shopping</a>
+  </center>
+</div>
+<h2 class="heading-agileinfo text-center pb-4">Shopping<span>Cart</span></h2>
+
+{% if order %}
+<div style="margin: 100px">
+  {% if buycart %}
+  <table border="0" style="margin: 50px">
+    <tr>
+      <th>IMAGE</th>
+      <th>ITEM</th>
+      <th>SHOP ADDRESS</th>
+      <th>PRICE</th>
+      <th>QUANTITY</th>
+      <th>TOTAL</th>
+      <th colspan="2"></th>
+    </tr>
+    {% for data in buycart %}
+    <tr>
+      <td>
+        <img src="{% if data.product.images %}{{ data.product.images.url }}{% endif %}" width="200" alt="" />
+      </td>
+      <td>{{ data.product.productname }}</td>
+      <td>
+        {{ data.product.shop_name.shopname }}<br>
+        {{ data.product.shop_name.location }}
+      </td>
+      <td>{{ data.product.price }}</td>
+      <td>{{ data.quantity }}</td>
+      <td>{{ data.total }}</td>
+
+      <td>
+        <a href="/deleteshopcart?id={{ data.id }}" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td colspan="8" class="text-center">
+        <a href="/shoppayment?id={{ oid }}" class="btn btn-primary" type="submit">Checkout</a>
+      </td>
+    </tr>
+    <!--  <tr>
+            <td colspan="8" class="text-center"><a href="/makeCOD?id={{oid}}" class="btn btn-primary">Cash on Delivery</a></td>
+        </tr>  -->
+  </table>
+  {% endif %}
+</div>
+{% else %}
+<h1 class="text-center m-3">No items in cart.</h1>
+{% endif %}
+{% endblock %}

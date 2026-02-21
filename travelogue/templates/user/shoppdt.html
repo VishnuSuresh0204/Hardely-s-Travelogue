@@ -1,0 +1,86 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+<style type="text/css">
+  #log {
+    background-color: rgba(233, 98, 127, 0.89);
+    margin: 10px 150px;
+    padding: 50px;
+    color: white;
+    width: 1000px;
+    float: left;
+  }
+
+  td,
+  th {
+    padding: 10px;
+  }
+
+  #tbl {
+    width: 900px;
+  }
+
+  a {
+    color: #ebd231;
+  }
+
+  table {
+    border-collapse: collapse;
+    border: none;
+  }
+
+  th {
+    background-color: black;
+    color: #ebd231;
+  }
+
+  tr:nth-child(odd) {
+    background-color: silver;
+  }
+</style>
+<form method="post">
+  {% csrf_token %}
+  <div style="margin: 100px">
+    {% comment %} <h3 style="margin: 20px">Enter deatails:</h3> {% endcomment %}
+    {% if pdt %}
+    <table border="0" style="margin: 50px">
+      <tr>
+        <th>IMAGE</th>
+        <th>ITEM</th>
+        <th>PRICE</th>
+        <th>QUANTITY</th>
+        <th colspan="2"></th>
+      </tr>
+      {% for data in pdt %}
+      <tr>
+        <td>
+          <img src="{% if data.images %}{{ data.images.url }}{% endif %}" width="200" alt="" />
+        </td>
+        <td>{{data.productname}}</td>
+        <td>
+          <strong>Shop:</strong> {{data.shop_name.shopname}}<br>
+          <strong>Location:</strong> {{data.shop_name.location}}
+        </td>
+        <td>price : {{data.price}}</td>
+        <td>Quantity:<input type="number" name="qty" value="1" class="form-control" min="1"></td>
+
+        <!-- <td>
+            <a href="" class="btn btn-danger">Delete</a>
+          </td> -->
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="8" class="text-center"><button class="btn btn-primary" type="submit">Place order</button></td>
+      </tr>
+      <!-- <tr>
+          <td colspan="8" class="text-center"><a href="/makeCOD?id={{oid}}" class="btn btn-primary">Cash on Delivery</a></td>
+      </tr> -->
+    </table>
+    {% endif %}
+  </div>
+</form>
+
+{% endblock %}

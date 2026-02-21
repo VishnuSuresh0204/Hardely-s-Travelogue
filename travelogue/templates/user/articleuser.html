@@ -1,0 +1,18 @@
+{% extends "user/commonpageuser.html" %}
+{% load static %}
+{% block content %}
+{% for data in artcle %}
+<div class="card text-center">
+    <div class="card-header">
+      
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{data.articlename}}</h5>
+      <p class="card-text">{{data.articles}}</p>
+    </div>
+    <div class="card-footer text-muted">
+      
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

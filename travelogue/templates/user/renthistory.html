@@ -1,0 +1,98 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+
+<style type="text/css">
+  #log {
+    background-color: rgba(233, 98, 127, 0.89);
+    margin: 10px 150px;
+    padding: 50px;
+    color: white;
+    width: 1000px;
+    float: left;
+  }
+
+  td,
+  th {
+    padding: 10px;
+  }
+
+  #tbl {
+    width: 900px;
+  }
+
+  a {
+    color: #ebd231;
+  }
+
+  table {
+    border-collapse: collapse;
+    border: none;
+  }
+
+  th {
+    background-color: black;
+    color: #ebd231;
+  }
+
+  tr:nth-child(odd) {
+    background-color: silver;
+  }
+</style>
+<center><a href="/rent" class="btn btn-danger">Continue shopping</a></center>
+
+<div style="margin: 100px">
+  <h2 class="heading-agileinfo text-center pb-4">Rent<span> Orders</span></h2>
+  {% if rentcart %}
+  <table border="0" style="margin: 50px">
+    <tr>
+      <th>IMAGE</th>
+      <th>ITEM</th>
+      <th>CLUB DETAILS</th>
+      <th>RENT</th>
+      <th>RENTED DATE</th>
+      <th>RETURN DATE</th>
+      <th>TOTAL</th>
+      <th colspan="2"></th>
+    </tr>
+    {% for data in rentcart %}
+    <tr>
+      <td>
+        <img src="{% if data.product.images %}{{ data.product.images.url }}{% endif %}" width="200" alt="" />
+      </td>
+      <td>{{data.product.productname}}</td>
+      <td>
+        {{ data.product.club_name.clubname }}<br>
+        {{ data.product.club_name.location }}<br>
+        {{ data.product.club_name.phonenumber }}
+      </td>
+      <td>{{data.product.rent}}</td>
+      <td>{{data.rented_date}}</td>
+      <td>{{data.return_date}}</td>
+      <td>{{data.total}}</td>
+
+
+      <!-- <td>
+        <a href="/deleteshopcart?id={{data.id}}" class="btn btn-danger">Delete</a>
+      </td>
+    </tr> -->
+      {% endfor %}
+      <!-- <tr>
+      <td colspan="8" class="text-center"><a href="/shoppayment?id={{oid}}" class="btn btn-danger"
+          type="submit">Checkout</a></td>
+    </tr> -->
+      <!-- <tr>
+            <td colspan="8" class="text-center"><a href="/makeCOD?id={{oid}}" class="btn btn-primary">Cash on Delivery</a></td>
+        </tr> -->
+
+  </table>
+  {% else %}
+  <h1 class="text-center m-3">No orders.</h1>
+  {% endif %}
+</div>
+
+
+{% endblock %}

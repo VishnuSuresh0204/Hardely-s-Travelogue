@@ -1,0 +1,114 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+
+<style type="text/css">
+  #log {
+    background-color: rgba(233, 98, 127, 0.89);
+    margin: 10px 150px;
+    padding: 50px;
+    color: white;
+    width: 1000px;
+    float: left;
+  }
+
+  td,
+  th {
+    padding: 10px;
+  }
+
+  #tbl {
+    width: 900px;
+  }
+
+  a {
+    color: #ebd231;
+  }
+
+  table {
+    border-collapse: collapse;
+    border: none;
+  }
+
+  th {
+    background-color: black;
+    color: #ebd231;
+  }
+
+  tr:nth-child(odd) {
+    background-color: silver;
+  }
+</style>
+<h2 class="heading-agileinfo text-center pb-4">Rent<span> Cart</span></h2>
+
+{% if order %}
+<div style="margin: 100px">
+  {% if cart %}
+  <table border="0" style="margin: 50px">
+    <tr>
+      <th>IMAGE</th>
+      <th>ITEM</th>
+      <th>CLUB DETAILS</th>
+      <th>RENT</th>
+      <th>RENTED DATE</th>
+      <th>RETURN DATE</th>
+      <th>TOTAL</th>
+      <th>STATUS</th>
+      <th colspan="2"></th>
+    </tr>
+    {% for data in cart %}
+    <tr>
+      <td>
+        <img src="{% if data.product.images %}{{ data.product.images.url }}{% endif %}" width="200" alt="" />
+      </td>
+      <td>{{data.product.productname}}</td>
+      <td>
+        {{ data.product.club_name.clubname }}<br>
+        {{ data.product.club_name.location }}<br>
+        {{ data.product.club_name.phonenumber }}
+      </td>
+      <td>{{data.product.rent}}</td>
+      <td>{{data.rented_date}}</td>
+      <td>{{data.return_date}}</td>
+      <td>{{data.total}}</td>
+      <td>
+        <b style="color: 
+          {% if data.status == 'approved' %}#28a745
+          {% elif data.status == 'requested' %}#ebd231
+          {% elif data.status == 'rejected' %}#dc3545
+          {% else %}#ebd231{% endif %};">
+          {{data.status|upper}}
+        </b>
+      </td>
+
+      <td>
+        <a href="/deleterentcart?id={{data.id}}" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td colspan="9" class="text-center">
+        {% if order.status == 'approved' %}
+        <a href="/rentpayment?id={{oid}}" class="btn btn-danger" type="submit">Checkout</a>
+        {% elif order.status == 'requested' %}
+        <span class="btn btn-warning" style="cursor: not-allowed; opacity: 0.6;">Waiting for Approval</span>
+        {% elif order.status == 'rejected' %}
+        <span class="btn btn-dark" style="cursor: not-allowed; opacity: 0.6;">Order Rejected</span>
+        {% endif %}
+      </td>
+    </tr>
+
+
+  </table>
+  {% endif %}
+</div>
+{% else %}
+<h1 class="text-center m-3">No items in cart.</h1>
+{% endif %}
+
+
+{% endblock %}

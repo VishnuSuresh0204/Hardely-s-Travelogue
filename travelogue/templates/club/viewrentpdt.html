@@ -1,0 +1,67 @@
+{% extends 'club/commonpageclub.html' %}
+{% comment %} {% load static %} {% endcomment %}
+{% block content %}
+{% for message in messages %}
+<script>
+  alert('{{ message }}')
+</script>
+{% endfor %}
+<style>
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+</style>
+
+<div class="title-section pb-sm-5 pb-3">
+  <h2 class="heading-agileinfo text-center pb-4">View<span>Products</span></h2>
+</div>
+<div class="container">
+  <table style="width:100%" class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Bike</th>
+        <th>Rent</th>
+        <th>Current Image</th>
+        <th>New Image</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for data in rent %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <tr>
+          <td>
+            <input name="bikename" type="text" value="{{ data.productname }}" required />
+          </td>
+          <td>
+            <input name="rent" type="tel" value="{{ data.rent }}" />
+          </td>
+          <td>
+            <img src="{% if data.images %}{{ data.images.url }}{% endif %}"
+              style="height: 150px; width: fit-content;" />
+          </td>
+          <td>
+            <input name="image" type="file" accept="image/*" />
+          </td>
+
+          <input name="ID" type="hidden" value="{{ data.id }}" />
+          <td>
+            <button type="submit" class="btn btn-success">Update</button>
+          </td>
+          <td>
+            <a href="/deleterent?id={{ data.id }}" type="submit" class="btn btn-danger">Delete</a>
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+    </tbody>
+
+    {% comment %} <th colspan="2"></th> {% endcomment %}
+  </table><br />
+</div>
+{% endblock %}

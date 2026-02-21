@@ -1,0 +1,36 @@
+<!--Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+{% extends 'admin/commonpageadmin.html' %}
+{% load static %}
+{% block content %}
+
+<section class="gallery py-lg-5">
+	<div class="container py-5">
+		<div class="title-section pb-sm-5 pb-3">
+			<h2 class="heading-agileinfo text-center pb-4">Our <span> Gallery</span></h2>
+		</div>
+		<center>
+			<div class="row agile_gallery_grids w3-agile demo">
+				<div class="col-md-4 gal-sec">
+					{% for data in post %}
+					<div class="gallery-grid1">
+						<a title="Nulla porttitor accumsana." href="../static/media/{{data.images}}">
+							<img src="{% if data.images %}{{ data.images.url }}{% endif %}" alt=" " class="img-fluid" />
+							<div class="p-mask">
+								<h4>hardely's travelogue</h4>
+								<p>Gallery</p>
+							</div>
+						</a>
+					</div>
+					{% endfor %}
+		</center>
+	</div>
+	</div>
+	</div>
+</section>
+<!--//Gallery-->
+
+{% endblock %}

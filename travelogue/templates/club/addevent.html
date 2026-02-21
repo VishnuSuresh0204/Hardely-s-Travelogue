@@ -1,0 +1,57 @@
+{% extends "club/commonpageclub.html" %}
+{% load static %}
+{% block content %}  
+{% for message in messages %} 
+	<script>alert('{{ message }}');</script>   
+ {% endfor %}
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var eventDateInput = document.getElementById('date'); // Corrected ID
+        var today = new Date().toISOString().split('T')[0];
+        eventDateInput.setAttribute('min', today);
+
+        var form = document.querySelector('.contact-form');
+        form.addEventListener('submit', function(event) {
+            var selectedDate = new Date(eventDateInput.value);
+            var currentDate = new Date();
+
+            // Set current date to start of day
+            currentDate.setHours(0, 0, 0, 0);
+
+            if (selectedDate < currentDate) {
+                alert("Date must be greater than today's date.");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <section class="contact py-lg-5">
+     <div class="container py-5">
+         <div class="title-section pb-sm-5 pb-3">
+            <h2 class="heading-agileinfo text-center pb-4">add<span> event</span></h2>
+         </div>
+         <div class="inner-sec-w3layouts-agileinfo">
+             <div class="contact_grid_right mt-5">
+                     <div class="contact_left_grid">
+                          <input type="text" name="eventname"  placeholder="Event name" required="">
+                          <!-- <input type="email" name="email" id="email" placeholder="email id" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                          <input  type="password" name="password" id="password" placeholder="password" required="" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."> -->
+                          <input type="text" name="startlocation"  placeholder="start location" required="">
+                          <input type="text" name="destination" placeholder="destination" required="">
+                          <input type="text" name="estimatedcost" placeholder="estimated cost" required="" >
+                          <input type="text" name="route" placeholder="Route" required="">
+                          <input type="date" name="date" id="date" placeholder="date" required="" >
+                          <input type="submit" value="Add">
+                          <input type="reset" value="Clear">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+</form>
+{% endblock %}

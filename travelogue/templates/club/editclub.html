@@ -1,0 +1,54 @@
+{% extends 'club/commonpageclub.html' %}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+        <div class="container py-5">
+            <div class="title-section pb-sm-5 pb-3">
+                <h2 class="heading-agileinfo text-center pb-4">Edit <span>Profile</span></h2>
+            </div>
+            <div class="inner-sec-w3layouts-agileinfo">
+                <div class="contact_grid_right mt-5">
+                    <div class="contact_left_grid">
+
+                        <!-- Username -->
+                        <input type="text" name="username" id="username" value="{{ user.username }}"
+                            placeholder="Username" required>
+
+                        <!-- Club Name -->
+                        <input type="text" name="clubname" id="clubname" value="{{ user.clubname }}"
+                            placeholder="Club Name" pattern="[a-zA-Z ]+" required>
+
+                        <!-- Location -->
+                        <input type="text" name="location" id="location" value="{{ user.location }}"
+                            placeholder="Location" required>
+
+                        <!-- Phone Number -->
+                        <input type="text" name="phoneNum" id="phoneNum" value="{{ user.phonenumber }}" minlength="10"
+                            maxlength="10" placeholder="Phone Number" required>
+
+                        {% comment %} <!-- Profile Image -->
+                        <label for="image">Profile Image</label>
+                        {% if user.image %}
+                        <div class="mb-2">
+                            <!-- Use .url for uploaded media files -->
+                            <img src="{{ user.image.url }}" alt="Current Image" width="100" height="100"
+                                class="rounded-circle">
+                        </div>
+                        {% endif %}
+                        <input type="file" name="image" id="image" accept="image/*"> {% endcomment %}
+
+                        <!-- Buttons -->
+                        <input type="submit" value="Save" class="btn btn-primary mt-3">
+                        <input type="reset" value="Clear" class="btn btn-secondary mt-3">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+{% endblock %}

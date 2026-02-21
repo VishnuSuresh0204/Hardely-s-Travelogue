@@ -1,0 +1,52 @@
+{% extends "club/commonpageclub.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container d-flex justify-content-center flex-column align-items-center mt-4">
+
+    <!-- Display messages safely -->
+    {% if messages %}
+    <div class="mb-3 w-100">
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Club cards -->
+    {% for data in club %}
+    <div class="card mb-3 w-75">
+        <div class="card-body d-flex align-items-center">
+            <!-- Profile image -->
+            {% comment %} <div class="flex-shrink-0">
+                {% if data.image %}
+                <a href="{{ data.image.url }}">
+                    <img src="{{ data.image.url }}" alt="{{ data.clubname }}" class="rounded-circle" width="100"
+                        height="100">
+                </a>
+                {% else %}
+                <img src="{% static 'images/default-avatar.png' %}" alt="Default Image" class="rounded-circle"
+                    width="100" height="100">
+                {% endif %}
+            </div> {% endcomment %}
+
+            <!-- Profile details -->
+            <div class="flex-grow-1 ms-3">
+                <h5 class="card-title">{{ data.clubname }}</h5>
+                <p class="card-text">Email: {{ data.email }}</p>
+                <p class="card-text">Phone: {{ data.phonenumber }}</p>
+                <p class="card-text">Location: {{ data.location }}</p>
+                <p class="card-text">Username: {{ data.username }}</p>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <a href="/editclub" class="btn btn-primary">Edit Profile</a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

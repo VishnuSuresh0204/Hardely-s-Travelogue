@@ -1,0 +1,226 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>hardely's travelogue;official website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="keywords" content="Vagabond Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+	SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design" />
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <!-- Custom Theme files -->
+    <link href='{% static "css/bootstrap.css" %}'type="text/css" rel="stylesheet" media="all">
+    <link href='{% static "css/style.css" %}'type="text/css" rel="stylesheet" media="all">
+	  <!-- grid hover -->
+    <link href='{% static "css/hover.css" %}' type="text/css" rel="stylesheet" media="all">
+	<!-- Testimonials-Css -->
+	<link href='{% static "css/mislider.css" %}' rel="stylesheet" type="text/css" />
+	<link href='{% static "css/mislider-custom.css" %}' rel="stylesheet" type="text/css"/>
+    <!-- font-awesome icons -->
+    <link href='{% static "css/fontawesome-all.min.css" %}' rel="stylesheet">
+	<!-- //Custom Theme files -->
+    <!-- online-fonts -->
+    <link href='{% static "//fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i" %}' rel="stylesheet">
+    <!-- //online-fonts -->
+</head>
+
+<body>
+    <!-- banner -->
+    <div class="inner-banner">
+        <!-- header -->
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary pt-3">
+                <h1>
+                    <a class="navbar-brand text-white" href="index.html">
+                      hardely'stravelogue
+                    </a>
+                </h1>
+                <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-lg-auto text-center">
+                        <li class="nav-item mr-3 mt-lg-0 mt-3">
+                            <a class="nav-link" href="/">Home
+                                <!-- <span class="sr-only">(current)</span> -->
+                            </a>
+                        </li>
+                       
+						<li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Registration
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/register_club">Club</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/register_user">User</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/register_shop">Shop</a>
+
+                            </div>
+                        </li>
+                        <li class="nav-item mr-3 mt-lg-0 mt-3">
+                            <a class="nav-link" href="/login">Login</a>
+                        </li>
+                    </ul>
+                </div>
+			</nav>
+        </header>
+        <!-- //header -->
+        
+    </div>    
+        
+        {% block content %}
+        {% endblock %}
+        <footer>
+            <div class="container py-md-4 mt-md-3">
+                <div class="row footer-top-w3layouts-agile py-5">
+                    <div class="col-md-4 footer-grid">
+                        <div class="footer-title">
+                            <h3>About Us</h3>
+                        </div>
+                        <div class="footer-text">
+                            <p>This is a inventory management of bikes and bike parts.This is a application of both sales and renting bikes and bike parts along with developing a rider's community.We are developing rider's community along with all supports.We are introducing many clubs and Professional riders also</p>
+						</div>
+                    </div>
+                    <div class="col-md-4 footer-grid">
+                        <div class="footer-title">
+                            <h3>Contact Us</h3>
+                        </div>
+                        <div class="contact-info">
+                        <h4>Location :</h4>
+                        <p>0926k 4th block building, king Avenue, kochi.</p>
+                        <div class="phone">
+                            <h4>Phone :</h4>
+                            <p>Phone : +121 098 8907 9987</p>
+                            <p>Email : <a href="mailto:info@example.com">info@example.com</a></p>
+                        </div>
+                    </div>
+                    </div>
+                    
+        </footer>
+        <!---->
+        <div class="copyright py-3">
+            <div class="container">
+                <div class="copyrighttop">
+                    
+                </div>
+                <div class="copyrightbottom">
+                    <p>© Hardely's Travelogue. All Rights Reserved 
+                        <a href="http://w3layouts.com/"></a>
+                    </p>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    <!-- //footer -->
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Vagabond</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+             <div class="agileits-w3layouts-info">
+                <img src='{% static "images/g6.jpg" %}' class="img-fluid" alt="" />
+                <p>Duis venenatis, turpis eu bibendum porttitor, sapien quam ultricies tellus, ac rhoncus risus odio eget nunc. Pellentesque ac fermentum diam. Integer eu facilisis nunc, a iaculis felis. Pellentesque pellentesque tempor enim, in dapibus turpis porttitor quis. </p>
+            </div>
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //Modal -->
+    
+    <!-- js -->
+        <script src='{% static "js/jquery-2.2.3.min.js" %}'></script>
+    <!-- //js -->
+    <!-- testimonial-plugin -->
+        <script src='{% static "js/mislider.js" %}'></script>
+        <script>
+            jQuery(function ($) {
+                var slider = $('.mis-stage').miSlider({
+                    //  The height of the stage in px. Options: false or positive integer. false = height is calculated using maximum slide heights. Default: false
+                    stageHeight: 320,
+                    //  Number of slides visible at one time. Options: false or positive integer. false = Fit as many as possible.  Default: 1
+                    slidesOnStage: false,
+                    //  The location of the current slide on the stage. Options: 'left', 'right', 'center'. Defualt: 'left'
+                    slidePosition: 'center',
+                    //  The slide to start on. Options: 'beg', 'mid', 'end' or slide number starting at 1 - '1','2','3', etc. Defualt: 'beg'
+                    slideStart: 'mid',
+                    //  The relative percentage scaling factor of the current slide - other slides are scaled down. Options: positive number 100 or higher. 100 = No scaling. Defualt: 100
+                    slideScaling: 150,
+                    //  The vertical offset of the slide center as a percentage of slide height. Options:  positive or negative number. Neg value = up. Pos value = down. 0 = No offset. Default: 0
+                    offsetV: -5,
+                    //  Center slide contents vertically - Boolean. Default: false
+                    centerV: true,
+                    //  Opacity of the prev and next button navigation when not transitioning. Options: Number between 0 and 1. 0 (transparent) - 1 (opaque). Default: .5
+                    navButtonsOpacity: 1,
+                });
+            });
+        </script>
+        <!-- //testimonial-plugin -->
+        <script src='{% static "js/counter.js" %}'></script>
+        <!-- //stats -->
+        <!-- start-smooth-scrolling -->
+        <script src='{% static "js/move-top.js" %}'></script>
+        <script src='{% static "js/easing.js" %}'></script>
+        <script>
+            jQuery(document).ready(function ($) {
+                $(".scroll").click(function (event) {
+                    event.preventDefault();
+    
+                    $('html,body').animate({
+                        scrollTop: $(this.hash).offset().top
+                    }, 1000);
+                });
+            });
+        </script>
+        <!-- //end-smooth-scrolling -->
+        <!-- smooth-scrolling-of-move-up -->
+        <script>
+            $(document).ready(function () {
+                /*
+                var defaults = {
+                    containerID: 'toTop', // fading element id
+                    containerHoverID: 'toTopHover', // fading element hover id
+                    scrollSpeed: 1200,
+                    easingType: 'linear' 
+                };
+                */
+    
+                $().UItoTop({
+                    easingType: 'easeOutQuart'
+                });
+    
+            });
+        </script>
+        <script src='{%static "js/SmoothScroll.min.js" %}'></script>
+        <!-- //smooth-scrolling-of-move-up -->
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src='{% static "js/bootstrap.js" %}'></script>
+        
+    </body>
+    
+    </html>

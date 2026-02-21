@@ -1,0 +1,50 @@
+{% extends "user/commonpageuser.html" %}
+{% load static %}
+{% block content %}  
+{% for message in messages %} 
+<script>alert('{{ message }}');</script>   
+{% endfor %} 
+<script>
+	// JavaScript to prevent selecting past months in the card expiry input field
+	document.addEventListener('DOMContentLoaded', function() {
+		var cardExpiryInput = document.getElementById('expiredate');
+		var today = new Date();
+		var currentYear = today.getFullYear();
+		var currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
+		var currentYearStr = currentYear.toString();
+		var currentMonthStr = currentMonth.toString().padStart(2, '0');
+
+		var minDate = currentYearStr + '-' + currentMonthStr;
+		cardExpiryInput.setAttribute('min', minDate);
+	});
+</script>
+
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">payment<span>form</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                        <form method="post">
+                            {% csrf_token %}
+                        
+                        <h1 class="price">Amount to pay :{{order.total}}<span>/-</span></h1>			
+
+						<input type="text" name="cardnumber"  placeholder="cardnumber" pattern="[0-9]{16}" minlength="16" maxlength="16" required="" >
+						<input type="month" name="date" id="expiredate" placeholder="expiry date" required="">
+					
+						<input type="tel" name="cvv"  placeholder="cvv" required="" pattern="[0-9]{3}" minlength="3" maxlength="3" title="enter correct 3 digit CVV number.">
+					
+						<input type="text" name="name"  placeholder="cardholder's name" required="">
+						<input type="submit" value="pay">
+						<input type="reset" value="Clear">                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   </form>
+
+{% endblock %}

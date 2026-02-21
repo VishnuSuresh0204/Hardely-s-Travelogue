@@ -1,0 +1,56 @@
+{% extends "shop/commonpageshop.html" %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<script>alert('{{ message }}');</script>
+{% endfor %}
+<style>
+  table,
+  th,
+  td {
+    border: 1px solid black;
+
+  }
+</style>
+
+
+<div class="title-section pb-sm-5 pb-3">
+  <h2 class="heading-agileinfo text-center pb-4">View <span>Products </span></h2>
+</div>
+<table style="width:100%" class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>price</th>
+      <th>Image</th>
+      {% comment %} <th>update image</th> {% endcomment %}
+      <th>stock</th>
+      <th colspan="2"></th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for data in sale %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <tr>
+        <td>{{data.productname}}</td>
+        <td><input name="price" type="number" value="{{data.price}}"></td>
+        <td><img src="{% if data.images %}{{ data.images.url }}{% endif %}" style="height: 150px; width: 150px;"></td>
+
+        {% comment %} <td><input name="image" type="file" value="{{data.images}}"> </td> {% endcomment %}
+        <td><input name="stock" type="number" value="{{data.stock}}"></td>
+        <input name="ID" type="hidden" value="{{data.id}}">
+        <!-- <td><img src="../static/images/{{data.images}}"></td> -->
+
+        <td><button type="submit" class="btn btn-primary">Update</button></td>
+    </form>
+
+    <td><a href="/deletesale?id={{data.id}}" class="btn btn-danger">Delete</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table><br>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'user/commonpageuser.html'%}
+{% load static %}
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="contact py-lg-5">
+       <div class="container py-5">
+           <div class="title-section pb-sm-5 pb-3">
+              <h2 class="heading-agileinfo text-center pb-4">edit<span>profile</span></h2>
+           </div>
+           <div class="inner-sec-w3layouts-agileinfo">
+               <div class="contact_grid_right mt-5">
+                       <div class="contact_left_grid">
+                            {% comment %} <input type="text" name="username" id="username" placeholder="username" value="{{data.email}}"> {% endcomment %}
+                            <input type="text" name="username"  placeholder="rider name" pattern="[a-zA-Z ]+" value="{{data.username}}">
+
+                            <input type="text" name="phonenumber"  placeholder="rider name" maxlength="10" minlength="10" value="{{data.phonenumber}}">
+                            <input type="text" name="address"  placeholder="Address" pattern="[a-zA-Z ]+" value="{{data.address}}">
+                            {% comment %} <img  src="../static/media/{{data.images}}" name="dp" style="height: 150px; width: 150px;">                            {% endcomment %}
+                            {% comment %} <input type="file" name="dp" placeholder="profile picture" value="{{data.images}}"> {% endcomment %}
+                            {% comment %} <input type="text" name="about" placeholder="About"value="{{data.bio}}"> {% endcomment %}
+
+                            <input type="submit" class="btn btn-success" value="Save">
+                            {% comment %} <input type="reset" value="Clear"> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

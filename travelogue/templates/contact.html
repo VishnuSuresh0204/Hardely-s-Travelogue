@@ -1,0 +1,36 @@
+
+<!--Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+{% extends 'commonpage.html' %}
+{% load static %}
+
+{% block content %}
+	<section class="contact py-lg-5">
+		<div class="container py-5">
+            <div class="title-section pb-sm-5 pb-3">
+               <h2 class="heading-agileinfo text-center pb-4">Contact <span> Us</span></h2>
+            </div>
+			<div class="inner-sec-w3layouts-agileinfo">
+				<div class="contact_grid_right mt-5">
+					<h6>Please fill this form to contact with us.</h6>
+					<form action="#" method="post">
+						<div class="contact_left_grid">
+							<input type="text" name="Name" placeholder="Name" required="">
+							<input type="email" name="Email" placeholder="Email" required="">
+							<input type="text" name="Subject" placeholder="Subject" required="">
+							<textarea name="Message" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required="">Message...</textarea>
+							<input type="submit" value="Login" placeholder="login">
+							<input type="reset" value="Clear">
+							<div class="clearfix"> </div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--//contact-->
+
+{% endblock %}

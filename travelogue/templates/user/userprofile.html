@@ -1,0 +1,31 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %} 
+    <script>alert('{{ message }}');</script>   
+{% endfor %}
+<div class="container d-flex justify-content-center">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for data in user %}
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 ms-3">
+                        <!-- Profile details -->
+                        <h4 style="text-transform: capitalize;" class="card-title">Name: {{data.username}}</h4>
+                        <p class="card-text">Email: {{data.email}}</p>
+                        <p class="card-text">Phone: {{data.phonenumber}}</p>
+                        <p  class="card-text">Location: {{data.address}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Edit profile button -->
+                <a href="/editprofile" class="btn btn-primary">Edit Profile</a>
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+</div>
+{% endblock %}

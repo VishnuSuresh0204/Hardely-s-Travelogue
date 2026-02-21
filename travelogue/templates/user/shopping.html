@@ -1,0 +1,28 @@
+{% extends 'user/commonpageuser.html' %}
+{% load static %}
+{% block content %}
+<div class="text-center container py-5">
+  <div class="title-section pb-sm-5 pb-3">
+    <h2 class="heading-agileinfo text-center pb-4">shopping<span>gallery</span></h2>
+  </div>
+  <section style="background-color: #eee;">
+    <div class="row">
+      {% for data in buycart %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <input name="image" type="image" class="card-img-top"
+            src="{% if data.images %}{{ data.images.url }}{% endif %}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{data.productname}}</h5>
+            <p class="card-text text-muted">Shop: {{data.shop_name.shopname}}</p>
+            <p class="card-text text-muted">Location: {{data.shop_name.location}}</p>
+            <p class="card-text">Price: {{data.price}}</p>
+            <a href="/add_shopcart?id={{data.id}}&price={{data.price}}" class="btn btn-danger">SHOP NOW</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
