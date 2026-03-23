@@ -3,55 +3,139 @@
 {% block content %}  
 {% for message in messages %} 
 	<script>alert('{{ message }}');</script>   
- {% endfor %}
- <script>
+{% endfor %}
+
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 40px auto 100px;
+    }
+    .premium-form-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+    .form-header { text-align: center; margin-bottom: 40px; }
+    .form-header h2 { font-weight: 800; font-size: 2rem; color: #1a1a2e; }
+    .form-header h2 span { color: #e53935; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 15px 20px;
+        background: #fcfcfc;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        border-color: #e53935;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(229, 57, 53, 0.05);
+    }
+
+    .btn-create {
+        width: 100%;
+        padding: 16px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-create:hover { background: #e53935; transform: translateY(-2px); }
+    
+    .btn-reset {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: #999;
+        font-weight: 600;
+        margin-top: 15px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="form-container">
+    <div class="premium-form-card">
+        <div class="form-header">
+            <h2>Add New <span>Event</span></h2>
+            <p class="text-muted">Organize your next community ride</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Event Name</label>
+                <input type="text" name="eventname" class="form-control-premium" placeholder="e.g. Mountain Explorer Ride" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Start Location</label>
+                        <input type="text" name="startlocation" class="form-control-premium" placeholder="City or Landmark" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <input type="text" name="destination" class="form-control-premium" placeholder="End Point" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Estimated Cost (₹)</label>
+                        <input type="number" name="estimatedcost" class="form-control-premium" placeholder="Per person" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Ride Date</label>
+                        <input type="date" name="date" id="date" class="form-control-premium" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Detailed Route Info</label>
+                <textarea name="route" class="form-control-premium" style="height: 120px;" placeholder="Describe the road path and stop points..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-create">Publish Event</button>
+            <input type="reset" value="Clear Form" class="btn-reset">
+        </form>
+    </div>
+</div>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        var eventDateInput = document.getElementById('date'); // Corrected ID
+        var eventDateInput = document.getElementById('date');
         var today = new Date().toISOString().split('T')[0];
         eventDateInput.setAttribute('min', today);
-
-        var form = document.querySelector('.contact-form');
-        form.addEventListener('submit', function(event) {
-            var selectedDate = new Date(eventDateInput.value);
-            var currentDate = new Date();
-
-            // Set current date to start of day
-            currentDate.setHours(0, 0, 0, 0);
-
-            if (selectedDate < currentDate) {
-                alert("Date must be greater than today's date.");
-                event.preventDefault(); // Prevent form submission
-            }
-        });
     });
 </script>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <section class="contact py-lg-5">
-     <div class="container py-5">
-         <div class="title-section pb-sm-5 pb-3">
-            <h2 class="heading-agileinfo text-center pb-4">add<span> event</span></h2>
-         </div>
-         <div class="inner-sec-w3layouts-agileinfo">
-             <div class="contact_grid_right mt-5">
-                     <div class="contact_left_grid">
-                          <input type="text" name="eventname"  placeholder="Event name" required="">
-                          <!-- <input type="email" name="email" id="email" placeholder="email id" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                          <input  type="password" name="password" id="password" placeholder="password" required="" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."> -->
-                          <input type="text" name="startlocation"  placeholder="start location" required="">
-                          <input type="text" name="destination" placeholder="destination" required="">
-                          <input type="text" name="estimatedcost" placeholder="estimated cost" required="" >
-                          <input type="text" name="route" placeholder="Route" required="">
-                          <input type="date" name="date" id="date" placeholder="date" required="" >
-                          <input type="submit" value="Add">
-                          <input type="reset" value="Clear">
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</div>
-</form>
 {% endblock %}

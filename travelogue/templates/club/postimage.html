@@ -2,26 +2,98 @@
 {% load static %}
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-       <div class="container py-5">
-           <div class="title-section pb-sm-5 pb-3">
-              <h2 class="heading-agileinfo text-center pb-4">Post<span>new picture</span></h2>
-           </div>
-           <div class="inner-sec-w3layouts-agileinfo">
-               <div class="contact_grid_right mt-5">
-                       <div class="contact_left_grid">
-                            <input type="file" name="photo" placeholder="picture" >
-                            <input type="submit" value="Post">
-                            <input type="reset" value="Clear">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto 100px;
+    }
+    .premium-form-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+    .form-header { text-align: center; margin-bottom: 40px; }
+    .form-header h2 { font-weight: 800; font-size: 2rem; color: #1a1a2e; }
+    .form-header h2 span { color: #e53935; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .custom-file-upload {
+        display: block;
+        width: 100%;
+        padding: 40px 20px;
+        background: #fcfcfc;
+        border: 2px dashed #f0f0f0;
+        border-radius: 16px;
+        text-align: center;
+        color: #999;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .custom-file-upload:hover { border-color: #e53935; color: #e53935; background: #fdf2f2; }
+    .custom-file-upload i { font-size: 2.5rem; display: block; margin-bottom: 15px; }
+
+    .btn-post {
+        width: 100%;
+        padding: 16px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 30px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-post:hover { background: #e53935; transform: translateY(-2px); }
+</style>
+
+<div class="form-container">
+    <div class="premium-form-card">
+        <div class="form-header">
+            <h2>Add to <span>Gallery</span></h2>
+            <p class="text-muted">Share your club's riding moments</p>
         </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Feature Image</label>
+                <input type="file" name="photo" id="galleryPhoto" style="display: none;" required onchange="updateUploadLabel(this)">
+                <label for="galleryPhoto" class="custom-file-upload" id="uploadLabel">
+                    <i class="fas fa-camera-retro"></i>
+                    <span>Click to select a photo from your device</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-post">Post to Gallery</button>
+        </form>
     </div>
 </div>
-</form>
+
+<script>
+    function updateUploadLabel(input) {
+        var label = document.getElementById('uploadLabel');
+        if (input.files && input.files.length > 0) {
+            label.querySelector('span').innerText = 'Selected: ' + input.files[0].name;
+            label.style.borderColor = '#2e7d32';
+            label.style.color = '#2e7d32';
+            label.style.background = '#e8f5e9';
+            label.querySelector('i').className = 'fas fa-check-circle';
+        }
+    }
+</script>
 {% endblock %}

@@ -6,101 +6,116 @@
 <script>alert('{{ message }}');</script>
 {% endfor %}
 
-<style type="text/css">
-    td,
-    th {
-        padding: 15px;
-        text-align: center;
-    }
+<style>
+  .admin-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 50px 30px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 40px;
+  }
+  .admin-hero h2 { font-weight: 800; font-size: 2.4rem; margin-bottom: 10px; }
+  .admin-hero h2 span { color: #e53935; }
 
-    table {
-        width: 90%;
-        margin: 50px auto;
-        border-collapse: collapse;
-        background: #222;
-        color: white;
-        border-radius: 10px;
-        overflow: hidden;
-    }
+  .order-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+  }
+  
+  .order-main { flex: 2; min-width: 300px; }
+  .order-side { flex: 1; min-width: 250px; background: #fcfcfc; border-radius: 16px; padding: 25px; border: 1px solid #f0f0f0; }
 
-    th {
-        background-color: #000;
-        color: #ebd231;
-        text-transform: uppercase;
-        font-size: 14px;
-    }
+  .user-badge { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+  .user-avatar { width: 50px; height: 50px; background: #1a1a2e; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .user-name { font-weight: 800; color: #1a1a2e; font-size: 1.1rem; }
+  
+  .item-list { list-style: none; padding: 0; margin: 0; }
+  .item-row { padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+  .item-row:last-child { border: none; }
+  .item-name { font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+  .item-dates { font-size: 0.85rem; color: #666; font-weight: 600; }
 
-    tr:nth-child(even) {
-        background-color: #333;
-    }
+  .price-summary { margin-top: 20px; padding-top: 15px; border-top: 2px solid #1a1a2e; }
+  .price-row { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; color: #e53935; }
 
-    .btn {
-        padding: 8px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .btn:hover {
-        opacity: 0.8;
-    }
+  .btn-approve-big {
+    display: block; width: 100%; padding: 12px; background: #2e7d32; color: #fff; border-radius: 10px; text-align: center; font-weight: 700; margin-bottom: 10px; text-decoration: none !important;
+  }
+  .btn-reject-big {
+    display: block; width: 100%; padding: 12px; background: #ffebee; color: #c62828; border-radius: 10px; text-align: center; font-weight: 700; text-decoration: none !important;
+  }
+  .btn-proof {
+    display: inline-block; padding: 6px 15px; background: #e3f2fd; color: #1565c0; border-radius: 6px; font-weight: 700; font-size: 0.8rem; margin-top: 10px; text-decoration: none !important;
+  }
 </style>
 
-<div class="container-fluid py-5">
-    <h2 class="heading-agileinfo text-center pb-4">Rental<span> Requests</span></h2>
+<div class="admin-hero">
+  <h2>Rental <span>Requests</span></h2>
+  <p>Verify rider identities and approve booking requests.</p>
+</div>
 
-    {% if orders %}
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Items</th>
-                <th>ID Proof</th>
-                <th>Total Price</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>
-                    {{ order.user_login.username }}<br>
-                    {{ order.user_login.phonenumber }}
-                </td>
-                <td>
-                    {% for item in order.rentcart_set.all %}
-                    {{ item.product.productname }} ({{ item.rented_date }} to {{ item.return_date }})<br>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% if order.file %}
-                    <a href="{{ order.file.url }}" target="_blank" class="btn btn-info">View ID Proof</a>
-                    {% else %}
-                    No Proof Uploaded
-                    {% endif %}
-                </td>
-                <td>₹{{ order.total }}</td>
-                <td>
-                    <a href="/acceptrent?id={{ order.id }}" class="btn btn-success">Approve</a>
-                    <a href="/rejectrent?id={{ order.id }}" class="btn btn-danger">Reject</a>
-                </td>
-            </tr>
+<div class="container pb-5">
+{% for order in orders %}
+<div class="order-card">
+    <div class="order-main">
+        <div class="user-badge">
+            <div class="user-avatar">{{ order.user_login.username|first|upper }}</div>
+            <div>
+                <span class="user-name">{{ order.user_login.username }}</span>
+                <div class="text-muted small"><i class="fas fa-phone mr-1"></i> {{ order.user_login.phonenumber }}</div>
+            </div>
+        </div>
+
+        <h5 class="mb-3" style="font-weight: 800; color: #1a1a2e; font-size: 0.9rem; text-transform: uppercase;">Requested Vehicles</h5>
+        <div class="item-list">
+            {% for item in order.rentcart_set.all %}
+            <div class="item-row">
+                <div class="item-name">{{ item.product.productname }}</div>
+                <div class="item-dates">
+                    <i class="far fa-calendar-alt mr-2"></i> {{ item.rented_date }} <i class="fas fa-arrow-right mx-2 text-muted"></i> {{ item.return_date }}
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <h4 class="text-center text-white">No pending rental requests.</h4>
-    {% endif %}
+        </div>
+
+        {% if order.file %}
+        <a href="{{ order.file.url }}" target="_blank" class="btn-proof">
+            <i class="fas fa-id-card mr-2"></i> View ID Proof
+        </a>
+        {% else %}
+        <div class="mt-3 text-danger small font-weight-bold"><i class="fas fa-exclamation-triangle mr-1"></i> No ID Proof Provided</div>
+        {% endif %}
+    </div>
+
+    <div class="order-side">
+        <div class="price-summary">
+            <div class="text-muted small mb-1">Estimated Total</div>
+            <div class="price-row">
+                <span>Total Due</span>
+                <span>₹{{ order.total }}</span>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="/acceptrent?id={{ order.id }}" class="btn-approve-big">Approve Request</a>
+            <a href="/rejectrent?id={{ order.id }}" class="btn-reject-big">Reject Request</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="text-center py-5 text-muted">
+    <i class="fas fa-clipboard-list fa-3x mb-3 d-block" style="opacity: 0.2"></i>
+    No pending rental requests at the moment.
+</div>
+{% endfor %}
 </div>
 
 {% endblock %}

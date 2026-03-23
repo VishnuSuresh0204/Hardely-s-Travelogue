@@ -1,18 +1,29 @@
 {% extends "club/commonpageclub.html" %}
 {% load static %}
 {% block content %}
-{% for data in artcle %}
-<div class="card text-center">
-    <div class="card-header">
-      
+<style>
+  .article-container { max-width: 800px; margin: 40px auto 100px; }
+  .article-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+    margin-bottom: 30px;
+  }
+  .article-title { font-weight: 800; font-size: 1.8rem; color: #1a1a2e; margin-bottom: 20px; border-bottom: 3px solid #e53935; display: inline-block; padding-bottom: 5px; }
+  .article-content { line-height: 1.8; color: #444; font-size: 1.1rem; }
+</style>
+
+<div class="article-container">
+    <h2 class="text-center mb-5" style="font-weight: 800;">My Published <span>Articles</span></h2>
+    {% for data in artcle %}
+    <div class="article-card">
+        <h3 class="article-title">{{data.articlename}}</h3>
+        <p class="article-content">{{data.articles}}</p>
     </div>
-    <div class="card-body">
-      <h5 class="card-title">{{data.articlename}}</h5>
-      <p class="card-text">{{data.articles}}</p>
-    </div>
-    <div class="card-footer text-muted">
-      
-    </div>
-  </div>
-{% endfor %}
+    {% empty %}
+    <div class="text-center py-5 text-muted">No articles published yet.</div>
+    {% endfor %}
+</div>
 {% endblock %}

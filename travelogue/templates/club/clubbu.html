@@ -1,28 +1,107 @@
 {% extends 'club/commonpageclub.html' %}
 {% load static %}
 {% block content %}
-<div class="text-center container py-5">
-    <h4 class="mt-4 mb-5"><strong>Clubs in our community</strong></h4>
-<section style=" padding:10px;">       
-        <table class="table table-striped table-hover">
+<style>
+  .community-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 40px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 50px;
+  }
+  .community-hero h2 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; }
+  .community-hero h2 span { color: #e53935; }
+
+  .club-list-container { max-width: 800px; margin: 0 auto 100px; }
+  
+  .table-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+  }
+
+  .premium-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+  .premium-table th {
+    background: #fcfcfc;
+    padding: 15px 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .premium-table td {
+    padding: 20px;
+    background: #fff;
+    vertical-align: middle;
+    border-top: 1px solid #f9f9f9;
+    border-bottom: 1px solid #f9f9f9;
+  }
+  .premium-table tr:hover td { background: #fdfdfd; }
+
+  .club-badge-cell { display: flex; align-items: center; gap: 15px; }
+  .club-mini-avatar {
+    width: 45px; height: 45px;
+    background: #fdf2f2;
+    color: #e53935;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+    border: 1px solid #feebeb;
+  }
+  .club-name-link { font-weight: 700; color: #1a1a2e; font-size: 1.05rem; text-decoration: none !important; }
+  .club-name-link:hover { color: #e53935; }
+
+  .btn-visit {
+    padding: 8px 18px;
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-decoration: none !important;
+    transition: 0.2s;
+  }
+  .btn-visit:hover { background: #e53935; color: #fff; }
+</style>
+
+<div class="community-hero">
+    <h2>Rider <span>Community</span></h2>
+    <p>Discover other active clubs in our travelogue community.</p>
+</div>
+
+<div class="club-list-container">
+    <div class="table-card">
+        <table class="premium-table">
             <thead>
                 <tr>
-                    <th colspan="2">CLUBS</th>
+                    <th>Official Riding Clubs</th>
+                    <th class="text-right">Action</th>
                 </tr>
             </thead>
-
             <tbody>
                 {% for data in clb %}
-                
                 <tr>
-                  <th scope="row">{{data.clubname}}</th>
-                  <td><a href="/clubclub?name={{data.id}}">view</a></td>
+                    <td>
+                        <div class="club-badge-cell">
+                          <div class="club-mini-avatar">{{data.clubname|first|upper}}</div>
+                          <a href="/clubclub?name={{data.id}}" class="club-name-link">{{data.clubname}}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <a href="/clubclub?name={{data.id}}" class="btn-visit">View Profile</a>
+                    </td>
                 </tr>
                 {% endfor %}
-                
             </tbody>
         </table>
-
-</section>
+    </div>
 </div>
 {% endblock %}

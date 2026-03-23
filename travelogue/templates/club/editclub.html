@@ -2,53 +2,145 @@
 {% load static %}
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-        <div class="container py-5">
-            <div class="title-section pb-sm-5 pb-3">
-                <h2 class="heading-agileinfo text-center pb-4">Edit <span>Profile</span></h2>
-            </div>
-            <div class="inner-sec-w3layouts-agileinfo">
-                <div class="contact_grid_right mt-5">
-                    <div class="contact_left_grid">
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto 100px;
+    }
+    .premium-form-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+    .form-header { text-align: center; margin-bottom: 40px; }
+    .form-header h2 { font-weight: 800; font-size: 2rem; color: #1a1a2e; }
+    .form-header h2 span { color: #e53935; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 15px 20px;
+        background: #fcfcfc;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        border-color: #e53935;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(229, 57, 53, 0.05);
+    }
 
-                        <!-- Username -->
-                        <input type="text" name="username" id="username" value="{{ user.username }}"
-                            placeholder="Username" required>
+    .btn-save {
+        width: 100%;
+        padding: 16px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-save:hover { background: #e53935; transform: translateY(-2px); }
+    
+    .custom-file-upload {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        background: #fdf2f2;
+        border: 2px dashed #e53935;
+        border-radius: 12px;
+        text-align: center;
+        color: #e53935;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-bottom: 25px;
+    }
+    .custom-file-upload:hover { background: #feebeb; }
+    .file-selected { border-style: solid; border-color: #2e7d32; color: #2e7d32; background: #e8f5e9; }
 
-                        <!-- Club Name -->
-                        <input type="text" name="clubname" id="clubname" value="{{ user.clubname }}"
-                            placeholder="Club Name" pattern="[a-zA-Z ]+" required>
+    .btn-cancel {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: #999;
+        font-weight: 600;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        text-decoration: none !important;
+    }
+</style>
 
-                        <!-- Location -->
-                        <input type="text" name="location" id="location" value="{{ user.location }}"
-                            placeholder="Location" required>
-
-                        <!-- Phone Number -->
-                        <input type="text" name="phoneNum" id="phoneNum" value="{{ user.phonenumber }}" minlength="10"
-                            maxlength="10" placeholder="Phone Number" required>
-
-                        {% comment %} <!-- Profile Image -->
-                        <label for="image">Profile Image</label>
-                        {% if user.image %}
-                        <div class="mb-2">
-                            <!-- Use .url for uploaded media files -->
-                            <img src="{{ user.image.url }}" alt="Current Image" width="100" height="100"
-                                class="rounded-circle">
-                        </div>
-                        {% endif %}
-                        <input type="file" name="image" id="image" accept="image/*"> {% endcomment %}
-
-                        <!-- Buttons -->
-                        <input type="submit" value="Save" class="btn btn-primary mt-3">
-                        <input type="reset" value="Clear" class="btn btn-secondary mt-3">
-
-                    </div>
-                </div>
-            </div>
+<div class="form-container">
+    <div class="premium-form-card">
+        <div class="form-header">
+            <h2>Edit <span>Profile</span></h2>
+            <p class="text-muted">Update your club's public information</p>
         </div>
-    </section>
-</form>
 
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username / Handle</label>
+                <input type="text" name="username" value="{{ user.username }}" class="form-control-premium" required>
+            </div>
+
+            <div class="form-group">
+                <label>Club Official Name</label>
+                <input type="text" name="clubname" value="{{ user.clubname }}" class="form-control-premium" pattern="[a-zA-Z ]+" required>
+            </div>
+
+            <div class="form-group">
+                <label>Base Location</label>
+                <input type="text" name="location" value="{{ user.location }}" class="form-control-premium" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contact Number (10 Digits)</label>
+                <input type="text" name="phoneNum" value="{{ user.phonenumber }}" minlength="10" maxlength="10" class="form-control-premium" required>
+            </div>
+
+            <div class="form-group">
+                <label>Club Profile Image</label>
+                <input type="file" name="image" id="profileImg" style="display: none;" onchange="updateFileName(this)">
+                <label for="profileImg" class="custom-file-upload" id="fileLabel">
+                    <i class="fas fa-camera mr-2"></i> Change Profile Photo
+                </label>
+            </div>
+
+            <button type="submit" class="btn-save">Save Profile Changes</button>
+            <a href="/clubuser" class="btn-cancel">Cancel & Go Back</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateFileName(input) {
+        var label = document.getElementById('fileLabel');
+        if (input.files && input.files.length > 0) {
+            label.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ' + input.files[0].name;
+            label.classList.add('file-selected');
+        }
+    }
+</script>
 {% endblock %}

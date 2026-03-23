@@ -2,32 +2,112 @@
 {% load static %}
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-       <div class="container py-5">
-           <div class="title-section pb-sm-5 pb-3">
-              <h2 class="heading-agileinfo text-center pb-4">edit<span> event</span></h2>
-           </div>
-           <div class="inner-sec-w3layouts-agileinfo">
-               <div class="contact_grid_right mt-5">
-                       <div class="contact_left_grid">
-                            <input type="text" name="event"value="{{event.name}}" placeholder="Event name" required="">
-                            <input type="text" name="startlocation"  value="{{event.starting_location}}" placeholder="starting location" required="">
-                            <input type="text" name="destination" value="{{event.destination}}" placeholder="Destination" required="">
-                            <input type="text" name="estimatedcost" placeholder="Estimated cost" value="{{event.estimated_cost}}" required="">
-                            <input type="date" name="date" placeholder="Date" value="{{event.date}}" required="">
-                            <label>{{event.date}}</label><br>
-                            
-                            <input type="submit" value="Save">
-                            <input type="reset" value="Clear">
-                            </div>
-                        </div>
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 40px auto 100px;
+    }
+    .premium-form-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+    .form-header { text-align: center; margin-bottom: 40px; }
+    .form-header h2 { font-weight: 800; font-size: 2rem; color: #1a1a2e; }
+    .form-header h2 span { color: #e53935; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 15px 20px;
+        background: #fcfcfc;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        border-color: #e53935;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(229, 57, 53, 0.05);
+    }
+
+    .btn-save {
+        width: 100%;
+        padding: 16px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-save:hover { background: #e53935; transform: translateY(-2px); }
+</style>
+
+<div class="form-container">
+    <div class="premium-form-card">
+        <div class="form-header">
+            <h2>Edit <span>Event</span></h2>
+            <p class="text-muted">Update ride details for #{{ event.id }}</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Event Name</label>
+                <input type="text" name="event" value="{{event.name}}" class="form-control-premium" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Start Location</label>
+                        <input type="text" name="startlocation" value="{{event.starting_location}}" class="form-control-premium" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <input type="text" name="destination" value="{{event.destination}}" class="form-control-premium" required>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Estimated Cost (₹)</label>
+                        <input type="number" name="estimatedcost" value="{{event.estimated_cost}}" class="form-control-premium" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Ride Date</label>
+                        <input type="date" name="date" value="{{event.date}}" class="form-control-premium" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
     </div>
 </div>
-</form>
+
 {% endblock %}
