@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,HttpResponse # type: ignore
 from django.contrib.auth import authenticate # type: ignore
 from .models import *
 from django.shortcuts import HttpResponseRedirect # type: ignore
-from django.db.models import Sum  # type: ignore
+from django.db.models import Q, Sum  # type: ignore
 from django.contrib import messages # type: ignore
 from datetime import date as d, datetime as dt
 
@@ -481,19 +481,16 @@ def editclub(request):
     uid = request.session['uid']
     user = Register_club.objects.get(user_login=uid)
     if request.POST:
-        username=request.POST["username"]
-        cname=request.POST["clubname"]
-        phoneNum=request.POST["phoneNum"]
-        location=request.POST["location"]
+        user.username = request.POST["username"]
+        user.clubname = request.POST["clubname"]
+        user.phonenumber = request.POST["phoneNum"]
+        user.location = request.POST["location"]
         if 'image' in request.FILES:
-            image=request.FILES["image"]
-        else:
-            image=user.image
-        # about=request.POST["about"]
-        updte=Register_club.objects.filter(id=user.id).update(username=username,clubname=cname,phonenumber=phoneNum,location=location,image=image)
-        messages.info(request,"Profile updated successfully")
+            user.image = request.FILES["image"]
+        user.save()
+        messages.info(request, "Profile updated successfully")
         return redirect('/clubuser')
-    return render(request,"club/editclub.html",{"user":user})
+    return render(request, "club/editclub.html", {"user": user})
 
 def postimage(request):
     uid = request.session['uid']
@@ -694,20 +691,17 @@ def joinevent(request):
 
 def editprofile(request):
     uid = request.session['uid']
-    data = Register_user.objects.get(user_login=uid)
+    user = Register_user.objects.get(user_login=uid)
     if request.POST:
-        username=request.POST["username"]
-        phonenumber=request.POST["phonenumber"]
-        address=request.POST["address"]
+        user.username = request.POST["username"]
+        user.phonenumber = request.POST["phonenumber"]
+        user.address = request.POST["address"]
         if 'dp' in request.FILES:
-            dp=request.FILES["dp"]
-        else:
-            dp=data.images
-        updte=Register_user.objects.filter(id=data.id).update(username=username,address=address,phonenumber=phonenumber)
-        # updte.save()
-        messages.info(request,"Profile edited successfully")
+            user.images = request.FILES["dp"]
+        user.save()
+        messages.info(request, "Profile edited successfully")
         return redirect("/userprofile")
-    return render(request,"user/editprofile.html",{"data":data})
+    return render(request, "user/editprofile.html", {"data": user})
 
 def clubsadmin(request):
     clb=Register_club.objects.all()
@@ -855,11 +849,15 @@ def ordershophistory(request):
     return render(request,"shop/ordershophistory.html",{"item":item})
 
 def orderclub(request):
-    uid=request.session["uid"]
-    club=Register_club.objects.get(user_login=uid)
-    item=Rentcart.objects.filter(status="paid",product__club_name_id=club.id)
-    print(item,"----------orderclub")
-    return render(request,"club/orderclub.html",{"item":item})
+    uid = request.session["uid"]
+    club = Register_club.objects.get(user_login=uid)
+    today = d.today().strftime('%Y-%m-%d')
+    item = Rentcart.objects.filter(
+        Q(status="paid") | Q(status="approved"), 
+        product__club_name_id=club.id,
+        return_date__gte=today
+    )
+    return render(request, "club/orderclub.html", {"item": item})
 
 def deliveryclub(request):
     id=request.GET.get("id")
@@ -868,10 +866,14 @@ def deliveryclub(request):
     return redirect("/orderclub")
 
 def orderclubhistory(request):
-    uid=request.session["uid"]
-    club=Register_club.objects.get(user_login=uid)
-    item=Rentcart.objects.filter(status="delivered",product__club_name_id=club.id)
-    return render(request,"club/orderclubhistory.html",{"item":item})
+    uid = request.session["uid"]
+    club = Register_club.objects.get(user_login=uid)
+    today = d.today().strftime('%Y-%m-%d')
+    item = Rentcart.objects.filter(
+        Q(status="delivered") | Q(status="rejected") | Q(return_date__lt=today),
+        product__club_name_id=club.id
+    ).exclude(status="requested")
+    return render(request, "club/orderclubhistory.html", {"item": item})
 
 def viewparticipant(request):
     uid=request.session["uid"]
