@@ -1,36 +1,109 @@
-<!--Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
 
-<section class="gallery py-lg-5">
-	<div class="container py-5">
-		<div class="title-section pb-sm-5 pb-3">
-			<h2 class="heading-agileinfo text-center pb-4">Our <span> Gallery</span></h2>
-		</div>
-		<center>
-			<div class="row agile_gallery_grids w3-agile demo">
-				<div class="col-md-4 gal-sec">
-					{% for data in post %}
-					<div class="gallery-grid1">
-						<a title="Nulla porttitor accumsana." href="../static/images/{{data.images}}">
-							<img src="{% if data.images %}{{ data.images.url }}{% endif %}" alt=" " class="img-fluid" />
-							<div class="p-mask">
-								<h4>hardely's travelogue</h4>
-								<p>Gallery</p>
-							</div>
-						</a>
-					</div>
-					{% endfor %}
-		</center>
-	</div>
-	</div>
-	</div>
-</section>
-<!--//Gallery-->
+<style>
+  /* ── Page Hero ── */
+  .gallery-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .gallery-hero h2 span {
+    color: #e53935;
+  }
+  .gallery-hero p {
+    color: rgba(255,255,255,.6);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  /* ── Masonry-style Grid ── */
+  .gallery-grid {
+    column-count: 3;
+    column-gap: 20px;
+    padding-bottom: 80px;
+  }
+  @media (max-width: 992px) { .gallery-grid { column-count: 2; } }
+  @media (max-width: 576px) { .gallery-grid { column-count: 1; } }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    transition: transform .3s;
+  }
+  .gallery-item:hover {
+    transform: translateY(-5px);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    display: block;
+    height: auto;
+    transition: transform 0.5s;
+  }
+  .gallery-item:hover img {
+    transform: scale(1.04);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding: 24px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+  .gallery-overlay h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .gallery-overlay p {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+</style>
+
+<div class="gallery-hero">
+  <h2>Our <span>Gallery</span></h2>
+  <p>Capturing the essence of hardely's travelogue through common stories</p>
+</div>
+
+<div class="container">
+  <div class="gallery-grid">
+    {% for data in post %}
+    <div class="gallery-item">
+      {% if data.images %}
+        <img src="{{ data.images.url }}" alt="Gallery Image">
+      {% endif %}
+      <div class="gallery-overlay">
+        <h4>{{ data.club_login.clubname }}</h4>
+        <p>Biking Community</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock %}

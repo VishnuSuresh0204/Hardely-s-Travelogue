@@ -1,35 +1,176 @@
-{% extends 'user/commonpageuser.html'%}
+{% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-       <div class="container py-5">
-           <div class="title-section pb-sm-5 pb-3">
-              <h2 class="heading-agileinfo text-center pb-4">edit<span>profile</span></h2>
-           </div>
-           <div class="inner-sec-w3layouts-agileinfo">
-               <div class="contact_grid_right mt-5">
-                       <div class="contact_left_grid">
-                            {% comment %} <input type="text" name="username" id="username" placeholder="username" value="{{data.email}}"> {% endcomment %}
-                            <input type="text" name="username"  placeholder="rider name" pattern="[a-zA-Z ]+" value="{{data.username}}">
+<style>
+  /* ── Page Hero ── */
+  .edit-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .edit-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .edit-hero h2 span { color: #e53935; }
 
-                            <input type="text" name="phonenumber"  placeholder="rider name" maxlength="10" minlength="10" value="{{data.phonenumber}}">
-                            <input type="text" name="address"  placeholder="Address" pattern="[a-zA-Z ]+" value="{{data.address}}">
-                            {% comment %} <img  src="../static/media/{{data.images}}" name="dp" style="height: 150px; width: 150px;">                            {% endcomment %}
-                            {% comment %} <input type="file" name="dp" placeholder="profile picture" value="{{data.images}}"> {% endcomment %}
-                            {% comment %} <input type="text" name="about" placeholder="About"value="{{data.bio}}"> {% endcomment %}
+  /* ── Form Card ── */
+  .form-container {
+    max-width: 700px;
+    margin: 0 auto 80px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    border: 1px solid #f0f0f0;
+  }
 
-                            <input type="submit" class="btn btn-success" value="Save">
-                            {% comment %} <input type="reset" value="Clear"> {% endcomment %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  .form-group { margin-bottom: 25px; }
+  .form-group label {
+    display: block;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-control-premium {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    background: #fcfcfc;
+    transition: all 0.3s;
+    font-size: 1rem;
+    color: #1a1a2e;
+  }
+  .form-control-premium:focus {
+    outline: none;
+    border-color: #e53935;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.05);
+  }
+
+  .avatar-upload-wrap {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .current-avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #eee;
+    object-fit: cover;
+  }
+
+  .btn-save-profile {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: #fff;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.3);
+    transition: all .2s;
+    cursor: pointer;
+  }
+    .btn-save-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(229, 57, 53, 0.4);
+    opacity: 0.95;
+    color: #fff;
+  }
+
+  .custom-file-upload {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: #fdf2f2;
+    border: 2px dashed #e53935;
+    border-radius: 12px;
+    text-align: center;
+    color: #e53935;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .custom-file-upload:hover { background: #feebeb; }
+  .file-selected { border-style: solid; border-color: #2e7d32; color: #2e7d32; background: #e8f5e9; }
+  
+  .current-avatar-placeholder {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #ccc;
+    border: 3px solid #eee;
+  }
+  
+  textarea.form-control-premium { min-height: 120px; resize: none; }
+</style>
+
+<div class="edit-hero">
+  <h2>Edit <span>Profile</span></h2>
 </div>
-</form>
+
+<div class="container pb-5">
+  <div class="form-container">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <div class="avatar-upload-wrap">
+        {% if data.images %}
+          <img src="{{ data.images.url }}" class="current-avatar" id="avatar-preview" alt="Current Avatar">
+        {% else %}
+          <div class="current-avatar-placeholder" id="avatar-preview">
+            <i class="fas fa-user"></i>
+          </div>
+        {% endif %}
+        
+        <div class="form-group mt-3">
+          <label class="input-label">Profile Photo</label>
+          <input type="file" name="dp" id="profileImg" style="display: none;" onchange="updateProfilePreview(this)">
+          <label for="profileImg" class="custom-file-upload" id="fileLabel">
+            <i class="fas fa-camera mr-2"></i> Update Rider Photo
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Display Name</label>
+        <input type="text" name="username" id="username" value="{{ data.username }}" class="form-control-premium">
+      </div>
+
+      <div class="form-group">
+        <label for="phonenumber">Phone Number</label>
+        <input type="text" name="phonenumber" id="phonenumber" value="{{ data.phonenumber }}" class="form-control-premium">
+      </div>
+
+      <div class="form-group">
+        <label for="address">Mailing Address</label>
+        <textarea name="address" id="address" class="form-control-premium">{{ data.address }}</textarea>
+      </div>
+
+      <button type="submit" class="btn-save-profile">
+        Update Account Info
+      </button>
+    </form>
+  </div>
+</div>
+
 {% endblock %}

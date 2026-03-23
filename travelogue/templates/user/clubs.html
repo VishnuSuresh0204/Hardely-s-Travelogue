@@ -1,28 +1,135 @@
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
-<div class="text-center container py-5">
-    <h4 class="mt-4 mb-5"><strong>Clubs in our community</strong></h4>
-<section style=" padding:10px;">       
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th colspan="2">CLUBS</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                {% for data in clb %}
-                
-                <tr>
-                  <th scope="row">{{data.clubname}}</th>
-                  <td><a href="/clubview?name={{data.id}}">view</a></td>
-                </tr>
-                {% endfor %}
-                
-            </tbody>
-        </table>
+<style>
+  /* ── Page Hero ── */
+  .clubs-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .clubs-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .clubs-hero h2 span {
+    color: #e53935;
+  }
+  .clubs-hero p {
+    color: rgba(255,255,255,.6);
+    font-size: 1.1rem;
+    margin: 0;
+  }
 
-</section>
+  /* ── Club Cards ── */
+  .club-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    transition: transform .3s, box-shadow .3s;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .club-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,.15);
+  }
+
+  .club-img-box {
+    height: 200px;
+    background: #eee;
+    overflow: hidden;
+    position: relative;
+  }
+  .club-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  .club-card:hover .club-img-box img {
+    transform: scale(1.1);
+  }
+
+  .club-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .club-content h4 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+  }
+  .club-loc {
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    flex: 1;
+  }
+  .club-loc i { color: #e53935; margin-right: 4px; }
+
+  .btn-club-view {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: background 0.3s;
+    display: block;
+    margin-top: auto;
+  }
+  .btn-club-view:hover {
+    background: #e53935;
+    color: #fff;
+  }
+</style>
+
+<div class="clubs-hero">
+  <h2>Our <span>Clubs</span></h2>
+  <p>Join elite rider communities and explore amazing stories</p>
 </div>
+
+<div class="container pb-5">
+  <div class="row g-4">
+    {% for data in clb %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="club-card">
+        <div class="club-img-box">
+          {% if data.image %}
+            <img src="{{ data.image.url }}" alt="{{ data.clubname }}">
+          {% else %}
+            <img src="{% static 'images/club-default.jpg' %}" alt="Club">
+          {% endif %}
+        </div>
+        
+        <div class="club-content">
+          <h4>{{ data.clubname }}</h4>
+          <div class="club-loc">
+            <i class="fas fa-map-marker-alt"></i> {{ data.location }}
+          </div>
+          <a href="/clubview?name={{ data.id }}" class="btn-club-view">
+            Visit Club Profile
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
 {% endblock %}

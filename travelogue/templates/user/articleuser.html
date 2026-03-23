@@ -1,18 +1,103 @@
 {% extends "user/commonpageuser.html" %}
 {% load static %}
 {% block content %}
-{% for data in artcle %}
-<div class="card text-center">
-    <div class="card-header">
-      
+
+<style>
+  .article-container {
+    max-width: 800px;
+    margin: 60px auto 100px;
+  }
+  .article-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+    position: relative;
+  }
+  .article-card::before {
+    content: '"';
+    position: absolute;
+    top: 40px; left: 40px;
+    font-size: 8rem;
+    color: #f0f0f0;
+    font-family: serif;
+    line-height: 1;
+    z-index: 0;
+  }
+  .article-content { position: relative; z-index: 1; }
+  
+  .article-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    background: #fff5f5;
+    color: #e53935;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+  }
+
+  .article-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1.2;
+    margin-bottom: 30px;
+  }
+  
+  .article-body {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #444;
+    white-space: pre-line;
+  }
+
+  .article-footer {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn-back {
+    color: #888;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: color 0.2s;
+  }
+  .btn-back:hover { color: #e53935; }
+</style>
+
+<div class="article-container">
+  {% for data in artcle %}
+  <div class="article-card">
+    <div class="article-content">
+      <span class="article-tag">Club Blog</span>
+      <h1 class="article-title">{{ data.articlename }}</h1>
+      <div class="article-body">
+        {{ data.articles }}
+      </div>
     </div>
-    <div class="card-body">
-      <h5 class="card-title">{{data.articlename}}</h5>
-      <p class="card-text">{{data.articles}}</p>
-    </div>
-    <div class="card-footer text-muted">
-      
+    
+    <div class="article-footer">
+      <a href="javascript:history.back()" class="btn-back">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Club
+      </a>
+      <div class="text-muted small d-flex align-items-center">
+        {% if data.club_login.image %}
+          <img src="{{ data.club_login.image.url }}" alt="Author" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 1px solid #eee;">
+        {% else %}
+          <i class="fas fa-feather-alt mr-2"></i>
+        {% endif %}
+        <span>Posted by {{ data.club_login.clubname }}</span>
+      </div>
     </div>
   </div>
-{% endfor %}
+  {% endfor %}
+</div>
+
 {% endblock %}

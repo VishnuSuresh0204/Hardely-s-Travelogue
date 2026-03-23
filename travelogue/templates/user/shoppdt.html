@@ -1,86 +1,178 @@
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
+
 {% for message in messages %}
 <script>alert('{{ message }}');</script>
 {% endfor %}
-<style type="text/css">
-  #log {
-    background-color: rgba(233, 98, 127, 0.89);
-    margin: 10px 150px;
-    padding: 50px;
-    color: white;
-    width: 1000px;
-    float: left;
+
+<style>
+  /* ── Page Hero ── */
+  .shop-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .shop-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .shop-hero h2 span {
+    color: #e53935;
   }
 
-  td,
-  th {
-    padding: 10px;
+  /* ── Product Card ── */
+  .checkout-container {
+    max-width: 900px;
+    margin: 0 auto 80px;
+  }
+  .checkout-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .checkout-image {
+    flex: 1;
+    min-width: 350px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+  }
+  .checkout-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,.06);
   }
 
-  #tbl {
-    width: 900px;
+  .checkout-details {
+    flex: 1;
+    min-width: 350px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+  .checkout-details h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+  }
+  
+  .shop-ref {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+  .shop-ref i { color: #e53935; margin-right: 6px; }
+
+  .price-highlight {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #e53935;
+    margin-bottom: 30px;
   }
 
-  a {
-    color: #ebd231;
+  .qty-selector {
+    background: #f8f9fa;
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+  }
+  .qty-selector label {
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .qty-input {
+    max-width: 120px;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
   }
 
-  table {
-    border-collapse: collapse;
+  .btn-add-cart {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: #fff;
     border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    box-shadow: 0 6px 15px rgba(229, 57, 53, 0.3);
+  }
+  .btn-add-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(229, 57, 53, 0.4);
+    color: #fff;
+    opacity: 0.95;
   }
 
-  th {
-    background-color: black;
-    color: #ebd231;
-  }
-
-  tr:nth-child(odd) {
-    background-color: silver;
+  @media (max-width: 768px) {
+    .checkout-card { flex-direction: column; }
+    .checkout-image, .checkout-details { min-width: 100%; }
   }
 </style>
-<form method="post">
-  {% csrf_token %}
-  <div style="margin: 100px">
-    {% comment %} <h3 style="margin: 20px">Enter deatails:</h3> {% endcomment %}
-    {% if pdt %}
-    <table border="0" style="margin: 50px">
-      <tr>
-        <th>IMAGE</th>
-        <th>ITEM</th>
-        <th>PRICE</th>
-        <th>QUANTITY</th>
-        <th colspan="2"></th>
-      </tr>
-      {% for data in pdt %}
-      <tr>
-        <td>
-          <img src="{% if data.images %}{{ data.images.url }}{% endif %}" width="200" alt="" />
-        </td>
-        <td>{{data.productname}}</td>
-        <td>
-          <strong>Shop:</strong> {{data.shop_name.shopname}}<br>
-          <strong>Location:</strong> {{data.shop_name.location}}
-        </td>
-        <td>price : {{data.price}}</td>
-        <td>Quantity:<input type="number" name="qty" value="1" class="form-control" min="1"></td>
 
-        <!-- <td>
-            <a href="" class="btn btn-danger">Delete</a>
-          </td> -->
-      </tr>
-      {% endfor %}
-      <tr>
-        <td colspan="8" class="text-center"><button class="btn btn-primary" type="submit">Place order</button></td>
-      </tr>
-      <!-- <tr>
-          <td colspan="8" class="text-center"><a href="/makeCOD?id={{oid}}" class="btn btn-primary">Cash on Delivery</a></td>
-      </tr> -->
-    </table>
+<div class="shop-hero">
+  <h2>Product <span>Details</span></h2>
+</div>
+
+<div class="checkout-container">
+  <form method="post">
+    {% csrf_token %}
+    {% if pdt %}
+    {% for data in pdt %}
+    <div class="checkout-card">
+      <div class="checkout-image">
+        {% if data.images %}
+          <img src="{{ data.images.url }}" alt="{{ data.productname }}">
+        {% else %}
+          <img src="{% static 'images/default-product.jpg' %}" alt="No image">
+        {% endif %}
+      </div>
+      
+      <div class="checkout-details">
+        <h3>{{ data.productname }}</h3>
+        <div class="shop-ref">
+          <p><i class="fas fa-store"></i> <strong>{{ data.shop_name.shopname }}</strong></p>
+          <p><i class="fas fa-map-marker-alt"></i> {{ data.shop_name.location }}</p>
+        </div>
+
+        <div class="price-highlight">₹{{ data.price }}</div>
+
+        <div class="qty-selector">
+          <label for="qty">Quantity</label>
+          <input type="number" name="qty" id="qty" value="1" class="qty-input" min="1">
+        </div>
+
+        <button class="btn-add-cart" type="submit">
+          <i class="fas fa-cart-plus mr-2"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+    {% endfor %}
     {% endif %}
-  </div>
-</form>
+  </form>
+</div>
 
 {% endblock %}

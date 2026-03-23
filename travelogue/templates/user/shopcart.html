@@ -1,100 +1,192 @@
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
-{% for message in messages %}
-<script>
-  alert('{{ message }}')
-</script>
-{% endfor %}
 
-<style type="text/css">
-  #log {
-    background-color: rgba(233, 98, 127, 0.89);
-    margin: 10px 150px;
-    padding: 50px;
-    color: white;
-    width: 1000px;
-    float: left;
+<style>
+  /* ── Page Hero ── */
+  .cart-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cart-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin_bottom: 12px;
+  }
+  .cart-hero h2 span { color: #e53935; }
+
+  /* ── Cart Layout ── */
+  .cart-wrapper { margin-bottom: 80px; }
+  
+  .cart-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    margin-bottom: 20px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    transition: transform .2s;
+  }
+  .cart-item:hover { transform: translateX(5px); }
+
+  .cart-item-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8f9fa;
+    flex-shrink: 0;
+  }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .cart-item-details { flex: 1; }
+  .cart-item-details h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+  .cart-item-meta {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
   }
 
-  td,
-  th {
-    padding: 10px;
+  .cart-item-pricing { text-align: right; min-width: 150px; }
+  .cart-price-unit { font-size: 0.85rem; color: #999; }
+  .cart-price-total { font-size: 1.25rem; font-weight: 800; color: #1a1a2e; }
+
+  .btn-remove {
+    color: #e53935;
+    background: #fff5f5;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    transition: all .2s;
+  }
+  .btn-remove:hover { background: #e53935; color: #fff; transform: scale(1.1); }
+
+  /* ── Summary ── */
+  .cart-summary {
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    position: sticky;
+    top: 30px;
+  }
+  .cart-summary h3 { font-weight: 700; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+  .summary-total {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e53935;
   }
 
-  #tbl {
-    width: 900px;
+  .btn-checkout {
+    background: #e53935;
+    color: #fff;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 30px;
+    transition: opacity .2s;
+    text-align: center;
+    display: block;
+    text-decoration: none !important;
   }
+  .btn-checkout:hover { opacity: 0.9; color: #fff; }
 
-  a {
-    color: #ebd231;
-  }
-
-  table {
-    border-collapse: collapse;
-    border: none;
-  }
-
-  th {
-    background-color: black;
-    color: #ebd231;
-  }
-
-  tr:nth-child(odd) {
-    background-color: silver;
+  @media (max-width: 576px) {
+    .cart-item { flex-direction: column; text-align: center; }
+    .cart-item-pricing { text-align: center; }
   }
 </style>
-<div>
-  <center>
-    <a href="/shopping" class="btn btn-danger">Continue shopping</a>
-  </center>
+
+<div class="cart-hero">
+  <h2>Shopping <span>Cart</span></h2>
 </div>
-<h2 class="heading-agileinfo text-center pb-4">Shopping<span>Cart</span></h2>
 
-{% if order %}
-<div style="margin: 100px">
+<div class="container cart-wrapper">
   {% if buycart %}
-  <table border="0" style="margin: 50px">
-    <tr>
-      <th>IMAGE</th>
-      <th>ITEM</th>
-      <th>SHOP ADDRESS</th>
-      <th>PRICE</th>
-      <th>QUANTITY</th>
-      <th>TOTAL</th>
-      <th colspan="2"></th>
-    </tr>
-    {% for data in buycart %}
-    <tr>
-      <td>
-        <img src="{% if data.product.images %}{{ data.product.images.url }}{% endif %}" width="200" alt="" />
-      </td>
-      <td>{{ data.product.productname }}</td>
-      <td>
-        {{ data.product.shop_name.shopname }}<br>
-        {{ data.product.shop_name.location }}
-      </td>
-      <td>{{ data.product.price }}</td>
-      <td>{{ data.quantity }}</td>
-      <td>{{ data.total }}</td>
-
-      <td>
-        <a href="/deleteshopcart?id={{ data.id }}" class="btn btn-danger">Delete</a>
-      </td>
-    </tr>
-    {% endfor %}
-    <tr>
-      <td colspan="8" class="text-center">
-        <a href="/shoppayment?id={{ oid }}" class="btn btn-primary" type="submit">Checkout</a>
-      </td>
-    </tr>
-    <!--  <tr>
-            <td colspan="8" class="text-center"><a href="/makeCOD?id={{oid}}" class="btn btn-primary">Cash on Delivery</a></td>
-        </tr>  -->
-  </table>
+  <div class="row">
+    <div class="col-lg-8">
+      {% for data in buycart %}
+      <div class="cart-item">
+        <div class="cart-item-img">
+          {% if data.product.images %}
+            <img src="{{ data.product.images.url }}" alt="{{ data.product.productname }}">
+          {% endif %}
+        </div>
+        <div class="cart-item-details">
+          <h4>{{ data.product.productname }}</h4>
+          <p class="cart-item-meta">Shop: {{ data.product.shop_name.shopname }}</p>
+          <p class="mb-0"><strong>Qty:</strong> {{ data.quantity }}</p>
+        </div>
+        <div class="cart-item-pricing">
+          <div class="cart-price-unit">₹{{ data.product.price }} each</div>
+          <div class="cart-price-total">₹{{ data.total }}</div>
+        </div>
+        <a href="/deleteshopcart?id={{ data.id }}" class="btn-remove" title="Remove Item">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>₹{{ order.total }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="text-success">Free</span>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <span>₹{{ order.total }}</span>
+        </div>
+        
+        <a href="/shoppayment?id={{ oid }}" class="btn-checkout">
+          Proceed to Payment
+        </a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <i class="fas fa-shopping-cart text-muted mb-4 d-block" style="font-size: 4rem; opacity: 0.3;"></i>
+    <h3 class="text-muted">Your cart is empty</h3>
+    <a href="/shopping" class="btn btn-outline-danger mt-3">Start Shopping</a>
+  </div>
   {% endif %}
 </div>
-{% else %}
-<h1 class="text-center m-3">No items in cart.</h1>
-{% endif %}
+
 {% endblock %}

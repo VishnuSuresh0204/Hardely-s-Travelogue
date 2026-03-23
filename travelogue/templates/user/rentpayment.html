@@ -1,50 +1,155 @@
 {% extends "user/commonpageuser.html" %}
 {% load static %}
-{% block content %}  
+{% block content %}
+
 {% for message in messages %} 
-<script>alert('{{ message }}');</script>   
+  <script>alert('{{ message }}');</script>   
 {% endfor %} 
+
+<style>
+  /* ── Page Hero ── */
+  .pay-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pay-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .pay-hero h2 span { color: #e53935; }
+
+  /* ── Payment Form ── */
+  .pay-container {
+    max-width: 600px;
+    margin: 0 auto 100px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .pay-summary-bar {
+    background: #fcfcfc;
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .pay-summary-bar .label { font-size: 0.9rem; color: #888; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+  .pay-summary-bar .amount { font-size: 2.4rem; font-weight: 800; color: #1a1a2e; }
+  .pay-summary-bar .amount span { font-size: 1rem; color: #888; font-weight: 500; }
+
+  .pay-body { padding: 40px; }
+
+  .cc-icons { display: flex; gap: 10px; margin-bottom: 30px; font-size: 2rem; color: #eee; }
+  .cc-icons i.active { color: #1a1a2e; }
+
+  .input-row { margin-bottom: 25px; }
+  .input-row label { display: block; font-weight: 700; color: #1a1a2e; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; }
+  
+  .pay-input {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    background: #fcfcfc;
+    transition: all 0.3s;
+    font-size: 1rem;
+    font-family: monospace;
+  }
+  .pay-input:focus { border-color: #e53935; outline: none; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+  .btn-pay-confirm {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: #fff;
+    border: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-pay-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(229, 57, 53, 0.4); opacity: 0.95; color: #fff; }
+
+  .secure-hint { text-align: center; margin-top: 25px; color: #bbb; font-size: 0.85rem; }
+</style>
+
+<div class="pay-hero">
+  <h2>Rent <span>Payment</span></h2>
+</div>
+
+<div class="pay-container">
+  <div class="pay-summary-bar">
+    <span class="label">Rental Total</span>
+    <div class="amount">₹{{ order.total }}<span>.00/-</span></div>
+  </div>
+
+  <div class="pay-body">
+    <div class="cc-icons text-center justify-content-center">
+      <i class="fab fa-cc-visa active"></i>
+      <i class="fab fa-cc-mastercard active"></i>
+      <i class="fab fa-cc-amex"></i>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="input-row">
+        <label>Card Number</label>
+        <input type="text" name="cardnumber" class="pay-input" placeholder="0000 0000 0000 0000" pattern="[0-9]{16}" minlength="16" maxlength="16" required>
+      </div>
+
+      <div class="row">
+        <div class="col-7">
+          <div class="input-row">
+            <label>Expiry Date</label>
+            <input type="month" name="date" id="expiredate" class="pay-input" required>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="input-row">
+            <label>CVV</label>
+            <input type="password" name="cvv" class="pay-input" placeholder="***" required pattern="[0-9]{3}" minlength="3" maxlength="3">
+          </div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <label>Cardholder Name</label>
+        <input type="text" name="name" class="pay-input" placeholder="Full name" required style="font-family: inherit;">
+      </div>
+
+      <button type="submit" class="btn-pay-confirm">
+        <i class="fas fa-lock mr-2"></i> Confirm Payment
+      </button>
+      
+      <div class="secure-hint">
+        <i class="fas fa-shield-alt mr-1"></i> Secure Transaction
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
-	// JavaScript to prevent selecting past months in the card expiry input field
-	document.addEventListener('DOMContentLoaded', function() {
-		var cardExpiryInput = document.getElementById('expiredate');
-		var today = new Date();
-		var currentYear = today.getFullYear();
-		var currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
-		var currentYearStr = currentYear.toString();
-		var currentMonthStr = currentMonth.toString().padStart(2, '0');
-
-		var minDate = currentYearStr + '-' + currentMonthStr;
-		cardExpiryInput.setAttribute('min', minDate);
-	});
+  document.addEventListener('DOMContentLoaded', function() {
+    var cardExpiryInput = document.getElementById('expiredate');
+    if(cardExpiryInput) {
+      var today = new Date();
+      var minDate = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0');
+      cardExpiryInput.setAttribute('min', minDate);
+    }
+  });
 </script>
-
-    <section class="contact py-lg-5">
-       <div class="container py-5">
-           <div class="title-section pb-sm-5 pb-3">
-              <h2 class="heading-agileinfo text-center pb-4">payment<span>form</span></h2>
-           </div>
-           <div class="inner-sec-w3layouts-agileinfo">
-               <div class="contact_grid_right mt-5">
-                       <div class="contact_left_grid">
-                        <form method="post">
-                            {% csrf_token %}
-                        
-                        <h1 class="price">Amount to pay :{{order.total}}<span>/-</span></h1>			
-
-						<input type="text" name="cardnumber"  placeholder="cardnumber" pattern="[0-9]{16}" minlength="16" maxlength="16" required="" >
-						<input type="month" name="date" id="expiredate" placeholder="expiry date" required="">
-					
-						<input type="tel" name="cvv"  placeholder="cvv" required="" pattern="[0-9]{3}" minlength="3" maxlength="3" title="enter correct 3 digit CVV number.">
-					
-						<input type="text" name="name"  placeholder="cardholder's name" required="">
-						<input type="submit" value="pay">
-						<input type="reset" value="Clear">                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-   </form>
 
 {% endblock %}

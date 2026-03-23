@@ -1,82 +1,140 @@
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
-{% for message in messages %}
-<script>alert('{{ message }}');</script>
-{% endfor %}
 
-<style type="text/css">
-  #log {
-    background-color: rgba(233, 98, 127, 0.89);
-    margin: 10px 150px;
-    padding: 50px;
-    color: white;
-    width: 1000px;
-    float: left;
+<style>
+  /* ── Page Hero ── */
+  .history-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .history-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .history-hero h2 span { color: #e53935; }
+  .history-hero p { color: rgba(255,255,255,.6); margin: 0; }
+
+  /* ── History Table ── */
+  .history-container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.04);
+    overflow: hidden;
+    margin-bottom: 80px;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .history-table { width: 100%; border-collapse: collapse; }
+  .history-table th {
+    background: #fcfcfc;
+    padding: 20px;
+    text-align: left;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .history-table td {
+    padding: 20px;
+    border-bottom: 1px solid #f9f9f9;
+    vertical-align: middle;
+    color: #444;
   }
 
-  td,
-  th {
-    padding: 10px;
+  .item-thumb {
+    width: 60px; height: 60px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8f9fa;
   }
+  .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-  #tbl {
-    width: 900px;
+  .status-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
   }
+  .status-paid { background: #e8f5e9; color: #2e7d32; }
 
-  a {
-    color: #ebd231;
-  }
+  .price-col { font-weight: 700; color: #1a1a2e; }
+  .date-col { color: #888; font-size: 0.9rem; }
 
-  table {
-    border-collapse: collapse;
-    border: none;
-  }
-
-  th {
-    background-color: black;
-    color: #ebd231;
-  }
-
-  tr:nth-child(odd) {
-    background-color: silver;
+  @media (max-width: 768px) {
+    .history-table, .history-table thead, .history-table tbody, .history-table th, .history-table td, .history-table tr { 
+        display: block; 
+    }
+    .history-table thead { display: none; }
+    .history-table td { text-align: right; padding-left: 50%; position: relative; border-bottom: 1px solid #eee; }
+    .history-table td:before { 
+        content: attr(data-label); 
+        position: absolute; left: 20px; 
+        font-weight: 700; color: #1a1a2e; 
+    }
+    .item-thumb { margin-left: auto; }
   }
 </style>
-<center><a href="/shopping" class="btn btn-danger">Continue shopping</a></center>
 
-<div style="margin: 100px">
-  <h2 class="heading-agileinfo text-center pb-4">Purchase <span>Orders</span></h2>
-  {% if buycart %}
-  <table border="0" style="margin: 50px">
-    <tr>
-      <th>IMAGE</th>
-      <th>ITEM</th>
-      <th>SHOP ADDRESS</th>
-      <th>PRICE</th>
-      <th>QUANTITY</th>
-      <th>TOTAL</th>
-      <th colspan="2"></th>
-    </tr>
-    {% for data in buycart %}
-    <tr>
-      <td>
-        <img src="{% if data.product.images %}{{ data.product.images.url }}{% endif %}" width="200" alt="" />
-      </td>
-      <td>{{data.product.productname}}</td>
-      <td>
-        {{ data.product.shop_name.shopname }}<br>
-        {{ data.product.shop_name.location }}
-      </td>
-      <td>{{data.product.price}}</td>
-      <td>{{data.quantity}}</td>
-      <td>{{data.total}}</td>
-      {% endfor %}
-  </table>
-
-  {% else %}
-  <h1 class="text-center m-3">No items in cart.</h1>
-  {% endif %}
+<div class="history-hero">
+  <h2>Purchase <span>History</span></h2>
+  <p>Overview of all your completed gear purchases</p>
 </div>
 
+<div class="container pb-5">
+  <div class="history-container">
+    {% if buycart %}
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Details</th>
+          <th>Price</th>
+          <th>Order Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in buycart %}
+        <tr>
+          <td data-label="Product">
+            <div class="item-thumb">
+              {% if data.product.images %}
+                <img src="{{ data.product.images.url }}" alt="{{ data.product.productname }}">
+              {% endif %}
+            </div>
+          </td>
+          <td data-label="Details">
+            <div class="font-weight-bold" style="color:#1a1a2e">{{ data.product.productname }}</div>
+            <div class="small text-muted">Qty: {{ data.quantity }}</div>
+          </td>
+          <td data-label="Price" class="price-col">₹{{ data.total }}</td>
+          <td data-label="Order Date" class="date-col">{{ data.order.date }}</td>
+          <td data-label="Status">
+            <span class="status-tag status-paid">{{ data.status }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="fas fa-shopping-bag text-muted mb-3 d-block" style="font-size: 3rem; opacity: 0.3;"></i>
+      <p class="text-muted">No purchase history found.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
 
 {% endblock %}

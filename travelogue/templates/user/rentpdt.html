@@ -1,9 +1,225 @@
 {% extends 'user/commonpageuser.html' %}
 {% load static %}
 {% block content %}
+
 {% for message in messages %}
 <script>alert('{{ message }}');</script>
 {% endfor %}
+
+<style>
+  /* ── Page Hero ── */
+  .pdt-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pdt-hero h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .pdt-hero h2 span {
+    color: #e53935;
+  }
+  .pdt-hero p {
+    color: rgba(255,255,255,.7);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── Product Section ── */
+  .pdt-container {
+    max-width: 900px;
+    margin: 0 auto 80px;
+  }
+  .pdt-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .pdt-image-side {
+    flex: 1;
+    min-width: 350px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .pdt-image-side img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  }
+
+  .pdt-info-side {
+    flex: 1;
+    min-width: 350px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+  .pdt-info-side h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  .pdt-club-info {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pdt-club-info i {
+    width: 20px;
+    color: #e53935;
+  }
+
+  .pdt-price-tag {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #e53935;
+    margin-bottom: 32px;
+    padding: 12px 20px;
+    background: #fff5f5;
+    border-radius: 12px;
+    display: inline-block;
+  }
+  .pdt-price-tag span {
+    font-size: 1rem;
+    color: #888;
+    font-weight: 500;
+  }
+
+  /* ── Rental Form ── */
+  .rental-form-group {
+    margin-bottom: 20px;
+  }
+  .rental-form-group label {
+    display: block;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .rental-form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    transition: border-color .2s;
+    font-size: 0.95rem;
+  }
+  .rental-form-group input:focus {
+    outline: none;
+    border-color: #e53935;
+  }
+  
+  .btn-submit-order {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
+    transition: transform .2s, box-shadow .2s;
+    cursor: pointer;
+  }
+  .btn-submit-order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.4);
+    opacity: 0.95;
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .pdt-card { flex-direction: column; }
+    .pdt-image-side { min-width: 100%; }
+    .pdt-info-side { min-width: 100%; padding: 30px; }
+  }
+</style>
+
+<div class="pdt-hero">
+  <h2>Rent <span>Booking</span></h2>
+  <p>Secure your gear for your next adventure. Fill in the details below to request a rental.</p>
+</div>
+
+<div class="pdt-container">
+  <form method="post" class="contact-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {% if pdtt %}
+    {% for data in pdtt %}
+    <div class="pdt-card">
+      <div class="pdt-image-side">
+        {% if data.images %}
+          <img src="{{ data.images.url }}" alt="{{ data.productname }}">
+        {% else %}
+          <img src="{% static 'images/default-product.jpg' %}" alt="No image">
+        {% endif %}
+      </div>
+      
+      <div class="pdt-info-side">
+        <h3>{{ data.productname }}</h3>
+        
+        <div class="pdt-club-info">
+          <span><i class="fas fa-store"></i> Club: {{ data.club_name.clubname }}</span>
+          <span><i class="fas fa-map-marker-alt"></i> Location: {{ data.club_name.location }}</span>
+          <span><i class="fas fa-phone-alt"></i> Phone: {{ data.club_name.phonenumber }}</span>
+        </div>
+
+        <div class="pdt-price-tag">
+          ₹{{ data.rent }} <span>/ day</span>
+        </div>
+
+        <div class="rental-form-group">
+          <label for="proof">Upload ID Proof (Aadhar/License):</label>
+          <input type="file" name="file" id="proof" required>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="rental-form-group">
+              <label for="rentdate">Start Date:</label>
+              <input type="date" name="rentdate" class="rentdate" id="rentdate" required>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="rental-form-group">
+              <label for="returndate">End Date:</label>
+              <input type="date" name="returndate" class="returndate" id="returndate" required>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-submit-order" type="submit">
+          <i class="fas fa-paper-plane mr-2"></i> Confirm Rental Request
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </form>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -19,83 +235,13 @@
       input.setAttribute('min', today);
     });
 
-    var form = document.querySelector('.contact-form');
-    form.addEventListener('submit', function (event) {
-      eventDateInputs.forEach(function (input) {
-        var selectedDate = new Date(input.value);
-        var currentDate = new Date();
-
-        // Set current date to start of day
-        currentDate.setHours(0, 0, 0, 0);
-
-        if (selectedDate < currentDate) {
-          alert("Dates must be greater than or equal to today's date.");
-          event.preventDefault(); // Prevent form submission
-        }
-      });
+    // Optional: Auto-set return date min when rent date is picked
+    eventDateInputs.forEach(function (input, index) {
+        input.addEventListener('change', function() {
+            returnDateInputs[index].setAttribute('min', this.value);
+        });
     });
   });
 </script>
-
-<style type="text/css">
-  /* External CSS file recommended for better organization */
-  .card {
-    margin: 10px;
-    width: 300px;
-    float: left;
-  }
-
-  .card img {
-    width: 100%;
-    height: auto;
-  }
-
-  .card-body {
-    padding: 10px;
-  }
-
-  .row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: nowrap;
-    margin-right: -15px;
-    margin-left: -15px;
-    justify-content: center;
-  }
-</style>
-
-<form method="post" class="contact-form" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div style="margin: 100px">
-    <div class="row">
-      {% if pdtt %}
-      {% for data in pdtt %}
-      <div class="card">
-        <img src="{% static 'media/' %}{{ data.images }}" class="card-img-top" alt="Product Image">
-        <div class="card-body">
-          <h5 class="card-title">{{ data.productname }}</h5>
-          <p class="card-text text-muted">Club: {{data.club_name.clubname}}</p>
-          <p class="card-text text-muted">Location: {{data.club_name.location}}</p>
-          <p class="card-text text-muted">Phone: {{data.club_name.phonenumber}}</p>
-          <p class="card-text">Rent: {{ data.rent }}</p>
-          <label for="proof{{ forloop.counter }}">Proof:</label>
-          <input type="file" name="file" class="form-control" id="proof" placeholder="Proof">
-          <label for="rentdate{{ forloop.counter }}">Rented Date:</label>
-          <input type="date" name="rentdate" class="form-control rentdate" id="rentdate" placeholder="Rented date">
-          <label for="returndate{{ forloop.counter }}">Return Date:</label>
-          <input type="date" name="returndate" class="form-control returndate" id="returndate"
-            placeholder="Return date">
-        </div>
-      </div>
-      {% endfor %}
-      {% endif %}
-    </div>
-    <div class="text-center">
-      <button class="btn btn-danger" type="submit">Place order</button>
-    </div>
-  </div>
-</form>
 
 {% endblock %}
