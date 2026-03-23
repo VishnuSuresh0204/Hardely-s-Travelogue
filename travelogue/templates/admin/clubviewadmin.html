@@ -1,115 +1,136 @@
 {% extends "admin/commonpageadmin.html" %}
 {% load static %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {% for data in clb %}
-  <section class="h-100 gradient-custom-2">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-lg-9 col-xl-7">
-          <div class="card">
-            <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
-              <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                <!-- <a href="#" data-toggle="modal" data-target="#myModal"> -->
-                <img src="{% if data.images %}{{ data.images.url }}{% endif %}" alt="Generic placeholder image"
-                  class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; height: 150px;">
-              </div>
-              <div class="ms-3" style="margin-top: 130px;">
-                <h4 class="text-capitalize" style="color: red;">{{data.clubname}}</h4>
 
-
-              </div>
-</form>
-</div>
-
-<div class="card-body p-4 text-black">
-  <div class="mb-5">
-    <p class="lead fw-normal mb-1">About</p>
-    <div class="p-4" style="background-color: #f8f9fa;">
-      <p class="font-italic mb-1">{{data.about}}</p>
-      <p class="font-italic mb-1"><strong>Location:</strong> {{data.location}}</p>
-      <p class="font-italic mb-1"><strong>Email:</strong> {{data.email}}</p>
-      <p class="font-italic mb-1"><strong>Phone:</strong> {{data.phonenumber}}</p>
-
-    </div>
-  </div>
-  <div class="mb-5">
-    <p class="lead fw-normal mb-1">Articles</p>
-    <!-- <p class="mb-0"><a href="/postarticle" class="text-muted">post</a></p> -->
-    {% for data in artcle %}
-    <div class="p-4" style="background-color: #f8f9fa;">
-      <a class="font-italic mb-1" href="/articleadmin?id={{data.id}}">{{data.articlename}}</a>
-
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <p class="lead fw-normal mb-0">Recent photos</p>
-    <!-- <p class="mb-0"><a href="/postimage" class="text-muted">post</a></p> -->
-  </div>
-
-  <div class="row g-2">
-    {% for data in post %}
-    <div class="col-md-4">
-      <!-- <a href="#" data-toggle="modal" data-target="#myModal"> -->
-
-      <img src="{% if data.images %}{{ data.images.url }}{% endif %}" alt="Image" class="w-100 rounded-3 image-adjust">
-    </div>
-    {% endfor %}
-    {% for data in post %}
-
-    <!-- <div class="flickr-grid">
-                  <a href="#" data-toggle="modal" data-target="#myModal">
-                      <img src='{% static "images/g9.jpg" %}' class="img-fluid" alt=" ">
-                  </a>
-                            </div> --><!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <div class="agileits-w3layouts-info">
-              <img src="{% if data.images %}{{ data.images.url }}{% endif %}" class="img-fluid" />
-              <!-- <p>Duis venenatis, turpis eu bibendum porttitor, sapien quam ultricies tellus, ac rhoncus risus odio eget nunc. Pellentesque ac fermentum diam. Integer eu facilisis nunc, a iaculis felis. Pellentesque pellentesque tempor enim, in dapibus turpis porttitor quis. </p> -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- //Modal -->
-
-    {% endfor %}
-  </div>
-
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-{% endfor %}
 <style>
-  .image-adjust {
-    width: 200px;
-    /* Adjust the width as needed */
-    height: 200px;
-    /* Adjust the height as needed */
+  /* ── Club Header ── */
+  .club-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 20px;
+    height: 250px;
+    position: relative;
+    margin-bottom: 100px;
+  }
+  
+  .club-profile-box {
+    position: absolute;
+    bottom: -60px;
+    left: 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 25px;
+    z-index: 10;
+  }
+  
+  .club-avatar {
+    width: 160px; height: 160px;
+    border-radius: 20px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: #fff;
+    overflow: hidden;
+  }
+  .club-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
+  .club-title-info h2 { font-size: 2.2rem; font-weight: 800; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); margin-bottom: 5px; }
+  .admin-badge { padding: 4px 15px; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+  /* ── Content Sections ── */
+  .section-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
     margin-bottom: 30px;
   }
+  .section-card h3 { font-size: 1.25rem; font-weight: 800; color: #1a1a2e; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+  .section-card h3 i { color: #e53935; }
+
+  .info-list { list-style: none; padding: 0; }
+  .info-list li { margin-bottom: 12px; color: #666; font-size: 0.95rem; }
+  .info-list li strong { color: #1a1a2e; width: 100px; display: inline-block; }
+
+  .article-item {
+    background: #fcfcfc;
+    border: 1px solid #f2f2f2;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: block;
+    text-decoration: none !important;
+    transition: all 0.2s;
+  }
+  .article-item:hover { border-color: #e53935; transform: translateX(5px); }
+  .article-item h5 { margin: 0; font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+  .photo-box { height: 180px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+  .photo-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+  .photo-box:hover img { transform: scale(1.1); }
 </style>
+
+{% for data in clb %}
+<div class="club-header">
+  <div class="club-profile-box">
+    <div class="club-avatar">
+      {% if data.images %}
+        <img src="{{ data.images.url }}" alt="Logo">
+      {% else %}
+        <img src="{% static 'images/club-default.jpg' %}" alt="Logo">
+      {% endif %}
+    </div>
+    <div class="club-title-info">
+      <h2>{{ data.clubname }}</h2>
+      <span class="admin-badge"><i class="fas fa-cog mr-1"></i> Admin View</span>
+    </div>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="section-card">
+        <h3><i class="fas fa-info-circle"></i> Club Profile</h3>
+        <p class="text-muted small mb-4">{{ data.about }}</p>
+        <ul class="info-list">
+          <li><strong>Location</strong> {{ data.location }}</li>
+          <li><strong>Email</strong> {{ data.email }}</li>
+          <li><strong>Phone</strong> {{ data.phonenumber }}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="section-card">
+        <h3><i class="fas fa-file-alt"></i> Articles</h3>
+        {% for a in artcle %}
+        <a href="/articleadmin?id={{ a.id }}" class="article-item">
+          <h5>{{ a.articlename }}</h5>
+        </a>
+        {% endfor %}
+        {% if not artcle %}
+          <p class="text-muted small">No articles published by this club.</p>
+        {% endif %}
+      </div>
+
+      <div class="section-card">
+        <h3><i class="fas fa-images"></i> Photo Gallery</h3>
+        <div class="photo-grid">
+          {% for p in post %}
+          <div class="photo-box">
+            {% if p.images %}
+              <img src="{{ p.images.url }}" alt="Post">
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if not post %}
+          <p class="text-muted small">No gallery images found.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
 {% endblock %}

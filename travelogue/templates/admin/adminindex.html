@@ -1,61 +1,138 @@
 {% extends 'admin/commonpageadmin.html' %}
 {% load static %}
 {% block content %}
-  {% for message in messages %}
-    <script>
-      alert('{{ message }}')
-    </script>
-  {% endfor %}
+<style>
+    .dashboard-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        border-radius: 20px;
+        padding: 40px;
+        color: #fff;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .dashboard-hero h2 { font-weight: 800; font-size: 2.2rem; }
+    .dashboard-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; }
 
-     <!-- //banner-text -->
-    <section class="about-w3ls py-5">
-      <div class="container pt-xl-5 pb-lg-3">
-        <div class="row">
-          <div class="col-lg-7">
-            <img src="{% static 'images/2.jpg' %}" alt="" class="img-section4 img-fluid">
-          </div>
-          <div class="col-lg-5 section-4">
-            <div class="agil_mor">
-              <h2 class="heading-agileinfo">What <span> We Do</span></h2>
-              <p class="vam">we create rider's community.we have many registered clubs and riders.you can see and join them and enjoy your dream rides..</p>
-              <!-- <a href="/clubs" class="mt-3">Join our RIDER'S COMMUNITY</a> -->
-            </div>
-          </div>
+    .stat-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 25px;
+        text-align: center;
+        border: 1px solid #eee;
+        transition: transform 0.3s;
+        height: 100%;
+    }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-icon {
+        width: 60px; height: 60px;
+        line-height: 60px;
+        background: #fdf2f2;
+        color: #e53935;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+    }
+    .stat-number { display: block; font-size: 1.8rem; font-weight: 800; color: #1a1a2e; }
+    .stat-label { font-size: 0.85rem; color: #999; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+
+    .action-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        margin-top: 30px;
+    }
+    .action-img { height: 200px; overflow: hidden; }
+    .action-img img { width: 100%; height: 100%; object-fit: cover; }
+    .action-body { padding: 25px; }
+    .action-body h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+    .btn-action {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #1a1a2e;
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none !important;
+        transition: 0.2s;
+    }
+    .btn-action:hover { background: #e53935; color: #fff; }
+</style>
+
+<div class="dashboard-hero">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2>Welcome back, Admin</h2>
+            <p>Monitor your community, approve new partners, and manage events from one central place.</p>
         </div>
-      </div>
-    </section>
-    <section class="about-w3ls py-5">
-      <div class="container pt-xl-5 pb-lg-3">
-        <div class="row">
-          <div class="col-lg-5 section-5">
-            <div class="agil_mor">
-              <h3 class="heading-agileinfo">We <span> Offer</span></h3>
-              <p class="vam">Explore our shopping gallery.Enjoy your rides with our inventory spares and equipments.. </p>
-              <!-- <a href="/shopping" class="mt-3">Shop from here</a> -->
-            </div>
-          </div>
-          <div class="col-lg-7">
-            <img src='{% static "images/1.jpg" %}' alt="" class="img-section4 img-fluid">
-          </div>
-          
+        <div class="col-md-4 text-center">
+            <i class="fas fa-shield-alt fa-5x" style="opacity: 0.2"></i>
         </div>
-      </div>
-    </section>
-    <section class="about-w3ls py-5">
-      <div class="container pt-xl-5 pb-lg-3">
-        <div class="row">
-          <div class="col-lg-7">
-            <img src='{% static "images/2.jpg" %}' alt="" class="img-section4 img-fluid">
-          </div>
-          <div class="col-lg-5 section-4">
-            <div class="agil_mor">
-              <h2 class="heading-agileinfo">What <span> We Do</span></h2>
-              <p class="vam">Explore our  gallery and rent out .Enjoy your rides with our inventory bikes.. </p>
-              <!-- <a href="/rent" class="mt-3">Get BIKES for rent</a> -->
-            </div>
-          </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <span class="stat-number">24</span>
+            <span class="stat-label">Active Riders</span>
         </div>
-      </div>
-    </section>
-   <!-- stats -->
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-flag"></i></div>
+            <span class="stat-number">12</span>
+            <span class="stat-label">Registered Clubs</span>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-store"></i></div>
+            <span class="stat-number">8</span>
+            <span class="stat-label">Partner Shops</span>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e1f5fe; color: #03a9f4;"><i class="fas fa-calendar-check"></i></div>
+            <span class="stat-number">5</span>
+            <span class="stat-label">Upcoming Events</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="action-card">
+            <div class="action-img"><img src="{% static 'images/1.jpg' %}" alt="Approve"></div>
+            <div class="action-body">
+                <h3>Partner Approvals</h3>
+                <p class="text-muted small">Review and approve new club and shop registration requests.</p>
+                <a href="/clubapprove" class="btn-action">Go to Approvals</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="action-card">
+            <div class="action-img"><img src="{% static 'images/2.jpg' %}" alt="Events"></div>
+            <div class="action-body">
+                <h3>Event Oversight</h3>
+                <p class="text-muted small">Manage official community events and track registrations.</p>
+                <a href="/eventadmin" class="btn-action">Manage Events</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="action-card">
+            <div class="action-img"><img src="{% static 'images/1.jpg' %}" alt="Feedback"></div>
+            <div class="action-body">
+                <h3>Rider Feedback</h3>
+                <p class="text-muted small">Monitor community sentiment and resolve reported issues.</p>
+                <a href="/viewfeedback" class="btn-action">View Feedbacks</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
