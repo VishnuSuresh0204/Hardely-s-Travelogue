@@ -1,14 +1,12 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="zxx">
 
 <head>
-    <title>hardely's travelogue;official website</title>
+    <title>hardely's travelogue | Official Rider Community</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <meta name="keywords" content="Vagabond Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
-	SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design" />
+    <meta name="keywords" content="Vagabond Responsive web template" />
     <script>
         addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
@@ -18,209 +16,170 @@
             window.scrollTo(0, 1);
         }
     </script>
-    <!-- Custom Theme files -->
-    <link href='{% static "css/bootstrap.css" %}'type="text/css" rel="stylesheet" media="all">
-    <link href='{% static "css/style.css" %}'type="text/css" rel="stylesheet" media="all">
-	  <!-- grid hover -->
-    <link href='{% static "css/hover.css" %}' type="text/css" rel="stylesheet" media="all">
-	<!-- Testimonials-Css -->
-	<link href='{% static "css/mislider.css" %}' rel="stylesheet" type="text/css" />
-	<link href='{% static "css/mislider-custom.css" %}' rel="stylesheet" type="text/css"/>
-    <!-- font-awesome icons -->
+    <link href='{% static "css/bootstrap.css" %}' type="text/css" rel="stylesheet" media="all">
+    <link href='{% static "css/style.css" %}' type="text/css" rel="stylesheet" media="all">
     <link href='{% static "css/fontawesome-all.min.css" %}' rel="stylesheet">
-	<!-- //Custom Theme files -->
-    <!-- online-fonts -->
-    <link href='{% static "//fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i" %}' rel="stylesheet">
-    <!-- //online-fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #e53935;
+        --secondary: #1a1a2e;
+        --dark-bg: #16213e;
+        --accent: #0f3460;
+        --text-light: #f8f9fa;
+        --glass: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+        font-family: 'Outfit', sans-serif;
+        background-color: #f4f7f6;
+        color: var(--secondary);
+    }
+
+    /* ── Header & Nav ── */
+    header {
+        background: var(--secondary);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .navbar {
+        padding: 1.2rem 2rem;
+        background: transparent !important;
+    }
+    .navbar-brand {
+        font-weight: 800;
+        font-size: 1.6rem;
+        letter-spacing: -1px;
+        color: #fff !important;
+    }
+    .navbar-brand span { color: var(--primary); }
+
+    .nav-link {
+        color: rgba(255,255,255,0.8) !important;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.5rem 1.2rem !important;
+        transition: all 0.3s;
+    }
+    .nav-link:hover {
+        color: var(--primary) !important;
+        transform: translateY(-2px);
+    }
+
+    .dropdown-menu {
+        background: var(--secondary);
+        border: 1px solid var(--glass);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        padding: 10px;
+    }
+    .dropdown-item {
+        color: #fff;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: 0.2s;
+    }
+    .dropdown-item:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    /* ── Footer ── */
+    footer {
+        background: var(--secondary);
+        color: #fff;
+        padding: 80px 0 40px;
+        margin-top: 100px;
+    }
+    .footer-title h3 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        color: #fff;
+    }
+    .footer-title h3::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 3px;
+        background: var(--primary);
+        margin-top: 10px;
+    }
+    .footer-text p { color: rgba(255,255,255,0.6); line-height: 1.8; }
+    .contact-info h4 { color: var(--primary); font-size: 1rem; font-weight: 700; margin-top: 20px; }
+</style>
 </head>
 
 <body>
-    <!-- banner -->
-    <div class="inner-banner">
-        <!-- header -->
-        <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-gradient-secondary pt-3">
-                <h1>
-                    <a class="navbar-brand text-white" href="index.html">
-                      hardely'stravelogue
-                    </a>
-                </h1>
-                <button class="navbar-toggler ml-md-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    HARDELY'S <span>Travelogue</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-lg-auto text-center">
-                        <li class="nav-item mr-3 mt-lg-0 mt-3">
-                            <a class="nav-link" href="/">Home
-                                <!-- <span class="sr-only">(current)</span> -->
-                            </a>
-                        </li>
-                       
-						<li class="nav-item dropdown mr-3 mt-lg-0 mt-3">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                Registration
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/register_club">Club</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/register_user">User</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/register_shop">Shop</a>
 
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="regDrop" data-toggle="dropdown">
+                                Join Us
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/register_user">As a Rider</a>
+                                <a class="dropdown-item" href="/register_club">As a Club</a>
+                                <a class="dropdown-item" href="/register_shop">As a Partner</a>
                             </div>
                         </li>
-                        <li class="nav-item mr-3 mt-lg-0 mt-3">
-                            <a class="nav-link" href="/login">Login</a>
+                        <li class="nav-item ml-lg-4">
+                            <a class="nav-link text-primary" href="/login"><i class="fas fa-sign-in-alt mr-1"></i> Login</a>
                         </li>
                     </ul>
                 </div>
-			</nav>
-        </header>
-        <!-- //header -->
-        
-    </div>    
-        
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-content-wrapper">
         {% block content %}
         {% endblock %}
-        <footer>
-            <div class="container py-md-4 mt-md-3">
-                <div class="row footer-top-w3layouts-agile py-5">
-                    <div class="col-md-4 footer-grid">
-                        <div class="footer-title">
-                            <h3>About Us</h3>
-                        </div>
-                        <div class="footer-text">
-                            <p>This is a inventory management of bikes and bike parts.This is a application of both sales and renting bikes and bike parts along with developing a rider's community.We are developing rider's community along with all supports.We are introducing many clubs and Professional riders also</p>
-						</div>
-                    </div>
-                    <div class="col-md-4 footer-grid">
-                        <div class="footer-title">
-                            <h3>Contact Us</h3>
-                        </div>
-                        <div class="contact-info">
-                        <h4>Location :</h4>
-                        <p>0926k 4th block building, king Avenue, kochi.</p>
-                        <div class="phone">
-                            <h4>Phone :</h4>
-                            <p>Phone : +121 098 8907 9987</p>
-                            <p>Email : <a href="mailto:info@example.com">info@example.com</a></p>
-                        </div>
-                    </div>
-                    </div>
-                    
-        </footer>
-        <!---->
-        <div class="copyright py-3">
-            <div class="container">
-                <div class="copyrighttop">
-                    
-                </div>
-                <div class="copyrightbottom">
-                    <p>© Hardely's Travelogue. All Rights Reserved 
-                        <a href="http://w3layouts.com/"></a>
-                    </p>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    <!-- //footer -->
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Vagabond</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-             <div class="agileits-w3layouts-info">
-                <img src='{% static "images/g6.jpg" %}' class="img-fluid" alt="" />
-                <p>Duis venenatis, turpis eu bibendum porttitor, sapien quam ultricies tellus, ac rhoncus risus odio eget nunc. Pellentesque ac fermentum diam. Integer eu facilisis nunc, a iaculis felis. Pellentesque pellentesque tempor enim, in dapibus turpis porttitor quis. </p>
-            </div>
-        </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
     </div>
-    <!-- //Modal -->
-    
-    <!-- js -->
-        <script src='{% static "js/jquery-2.2.3.min.js" %}'></script>
-    <!-- //js -->
-    <!-- testimonial-plugin -->
-        <script src='{% static "js/mislider.js" %}'></script>
-        <script>
-            jQuery(function ($) {
-                var slider = $('.mis-stage').miSlider({
-                    //  The height of the stage in px. Options: false or positive integer. false = height is calculated using maximum slide heights. Default: false
-                    stageHeight: 320,
-                    //  Number of slides visible at one time. Options: false or positive integer. false = Fit as many as possible.  Default: 1
-                    slidesOnStage: false,
-                    //  The location of the current slide on the stage. Options: 'left', 'right', 'center'. Defualt: 'left'
-                    slidePosition: 'center',
-                    //  The slide to start on. Options: 'beg', 'mid', 'end' or slide number starting at 1 - '1','2','3', etc. Defualt: 'beg'
-                    slideStart: 'mid',
-                    //  The relative percentage scaling factor of the current slide - other slides are scaled down. Options: positive number 100 or higher. 100 = No scaling. Defualt: 100
-                    slideScaling: 150,
-                    //  The vertical offset of the slide center as a percentage of slide height. Options:  positive or negative number. Neg value = up. Pos value = down. 0 = No offset. Default: 0
-                    offsetV: -5,
-                    //  Center slide contents vertically - Boolean. Default: false
-                    centerV: true,
-                    //  Opacity of the prev and next button navigation when not transitioning. Options: Number between 0 and 1. 0 (transparent) - 1 (opaque). Default: .5
-                    navButtonsOpacity: 1,
-                });
-            });
-        </script>
-        <!-- //testimonial-plugin -->
-        <script src='{% static "js/counter.js" %}'></script>
-        <!-- //stats -->
-        <!-- start-smooth-scrolling -->
-        <script src='{% static "js/move-top.js" %}'></script>
-        <script src='{% static "js/easing.js" %}'></script>
-        <script>
-            jQuery(document).ready(function ($) {
-                $(".scroll").click(function (event) {
-                    event.preventDefault();
-    
-                    $('html,body').animate({
-                        scrollTop: $(this.hash).offset().top
-                    }, 1000);
-                });
-            });
-        </script>
-        <!-- //end-smooth-scrolling -->
-        <!-- smooth-scrolling-of-move-up -->
-        <script>
-            $(document).ready(function () {
-                /*
-                var defaults = {
-                    containerID: 'toTop', // fading element id
-                    containerHoverID: 'toTopHover', // fading element hover id
-                    scrollSpeed: 1200,
-                    easingType: 'linear' 
-                };
-                */
-    
-                $().UItoTop({
-                    easingType: 'easeOutQuart'
-                });
-    
-            });
-        </script>
-        <script src='{%static "js/SmoothScroll.min.js" %}'></script>
-        <!-- //smooth-scrolling-of-move-up -->
-        <!-- Bootstrap core JavaScript
-    ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src='{% static "js/bootstrap.js" %}'></script>
-        
-    </body>
-    
-    </html>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-title">
+                        <h3>Hardely's Travelogue</h3>
+                    </div>
+                    <div class="footer-text">
+                        <p>The ultimate ecosystem for the riding community. From premium gear to riding clubs and bike rentals, we've got your next adventure covered.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-title">
+                        <h3>Contact Info</h3>
+                    </div>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt mr-2 text-primary"></i> 4th Block Building, King Avenue, Kochi</p>
+                        <p><i class="fas fa-phone mr-2 text-primary"></i> +91 987 654 3210</p>
+                        <p><i class="fas fa-envelope mr-2 text-primary"></i> support@hardelys.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5 pt-4 border-top" style="border-color: rgba(255,255,255,0.05) !important;">
+                <p class="small text-muted">&copy; 2026 Hardely's Travelogue. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src='{% static "js/jquery-2.2.3.min.js" %}'></script>
+    <script src='{% static "js/bootstrap.js" %}'></script>
+</body>
+</html>

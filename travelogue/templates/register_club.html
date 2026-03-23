@@ -2,64 +2,149 @@
 {% load static %}
 {% block content %}
 
-<div class="container py-5">
-    <h2 class="text-center mb-4">Club Registration Form</h2>
+<style>
+    .auth-page-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f4f7f6 0%, #e9eeee 100%);
+        padding: 60px 20px;
+    }
 
-    <!-- Display messages -->
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
+    .auth-card {
+        background: #fff;
+        border-radius: 30px;
+        width: 100%;
+        max-width: 600px;
+        padding: 50px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 6px;
+        background: linear-gradient(to right, #e53935, #1a1a2e);
+    }
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    .auth-header { text-align: center; margin-bottom: 40px; }
+    .auth-header h2 { font-weight: 800; font-size: 2.2rem; color: #1a1a2e; letter-spacing: -1px; }
+    .auth-header h2 span { color: #e53935; }
+    .auth-header p { color: #888; font-weight: 500; font-size: 0.95rem; }
 
-        <!-- Username -->
-        <div class="mb-3">
-            <input type="text" name="username" class="form-control" placeholder="Username" required>
+    .form-group-premium { margin-bottom: 25px; position: relative; }
+    .form-group-premium label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #999;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 15px 20px;
+        background: #fcfcfc;
+        border: 2px solid #f1f3f5;
+        border-radius: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        background: #fff;
+        border-color: #e53935;
+        box-shadow: 0 10px 20px rgba(229, 57, 53, 0.05);
+    }
+
+    .row-premium { display: flex; gap: 20px; }
+    .row-premium > div { flex: 1; }
+
+    .btn-auth-primary {
+        width: 100%;
+        padding: 18px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 15px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(26, 26, 46, 0.15);
+    }
+    .btn-auth-primary:hover {
+        background: #e53935;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(229, 57, 53, 0.2);
+    }
+
+    .auth-footer { text-align: center; margin-top: 30px; font-size: 0.95rem; }
+    .auth-footer a { color: #e53935; font-weight: 700; text-decoration: none; }
+</style>
+
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Club <span>Onboarding</span></h2>
+            <p>Register your riding club for official status</p>
         </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-            <input type="email" name="email" class="form-control" placeholder="Email ID" required>
-        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info py-2 small mb-4" style="border-radius: 10px;">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
 
-        <!-- Password -->
-        <div class="mb-3">
-            <input type="password" name="password" class="form-control" placeholder="Password" required
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                title="Password must have 8+ characters, uppercase, lowercase, number, and special character">
-        </div>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group-premium">
+                <label>Official Club Name</label>
+                <input type="text" name="clubname" class="form-control-premium" placeholder="e.g. Redline Riders Club" pattern="[a-zA-Z ]+" required>
+            </div>
 
-        <!-- Club Name -->
-        <div class="mb-3">
-            <input type="text" name="clubname" class="form-control" placeholder="Club Name" required
-                pattern="[a-zA-Z ]+">
-        </div>
+            <div class="row-premium">
+                <div class="form-group-premium">
+                    <label>Admin Handle</label>
+                    <input type="text" name="username" class="form-control-premium" placeholder="clb_admin" required>
+                </div>
+                <div class="form-group-premium">
+                    <label>Base Location</label>
+                    <input type="text" name="location" class="form-control-premium" placeholder="e.g. Bangalore, KA" required>
+                </div>
+            </div>
 
-        <!-- Location -->
-        <div class="mb-3">
-            <input type="text" name="location" class="form-control" placeholder="Location" required>
-        </div>
+            <div class="form-group-premium">
+                <label>Club Email ID</label>
+                <input type="email" name="email" class="form-control-premium" placeholder="contact@clubname.com" required>
+            </div>
 
-        <!-- Phone Number -->
-        <div class="mb-3">
-            <input type="text" name="phoneNum" class="form-control" placeholder="Phone Number" required minlength="10"
-                maxlength="10">
-        </div>
+            <div class="form-group-premium">
+                <label>Access Password</label>
+                <input type="password" name="password" class="form-control-premium" placeholder="8+ chars (A, a, 1, #)" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Must contain uppercase, lowercase, digit, and special char." required>
+            </div>
 
-        <!-- Profile Image -->
-        {% comment %} <div class="mb-3">
-            <label for="image">Profile Image</label>
-            <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
-        </div> {% endcomment %}
+            <div class="form-group-premium">
+                <label>Official Phone Number</label>
+                <input type="text" name="phoneNum" class="form-control-premium" placeholder="10-digit primary contact" required minlength="10" maxlength="10">
+            </div>
 
-        <!-- Submit -->
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn-auth-primary">Submit Club Application</button>
+        </form>
+
+        <div class="auth-footer">
+            <span class="text-muted">Part of another group?</span>
+            <a href="/login" class="ml-2">Return to Login</a>
         </div>
-    </form>
+    </div>
 </div>
-
 {% endblock %}

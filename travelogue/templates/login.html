@@ -1,31 +1,142 @@
 {% extends 'commonpage.html' %}
 {% load static %}
 {% block content %}
-  {% for message in messages %}
-    <script>
-      alert('{{ message }}')
-    </script>
-  {% endfor %}
+{% for message in messages %}
+    <script>alert('{{ message }}')</script>
+{% endfor %}
 
-  <form method="post">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-      <div class="container py-5">
-        <div class="title-section pb-sm-5 pb-3">
-          <h2 class="heading-agileinfo text-center pb-4">Log<span>In</span></h2>
+<style>
+    .auth-page-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f4f7f6 0%, #e9eeee 100%);
+        padding: 40px 20px;
+    }
+
+    .auth-card {
+        background: #fff;
+        border-radius: 30px;
+        width: 100%;
+        max-width: 450px;
+        padding: 50px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .auth-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 6px;
+        background: linear-gradient(to right, #e53935, #1a1a2e);
+    }
+
+    .auth-header { text-align: center; margin-bottom: 40px; }
+    .auth-header h2 { font-weight: 800; font-size: 2.2rem; color: #1a1a2e; letter-spacing: -1px; }
+    .auth-header h2 span { color: #e53935; }
+    .auth-header p { color: #888; font-weight: 500; font-size: 0.95rem; }
+
+    .form-group-premium { margin-bottom: 25px; position: relative; }
+    .form-group-premium i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        transition: 0.3s;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 16px 20px 16px 55px;
+        background: #fcfcfc;
+        border: 2px solid #f1f3f5;
+        border-radius: 15px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        background: #fff;
+        border-color: #e53935;
+        box-shadow: 0 10px 20px rgba(229, 57, 53, 0.05);
+    }
+    .form-group-premium:focus-within i { color: #e53935; }
+
+    .btn-auth-primary {
+        width: 100%;
+        padding: 18px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 15px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 10px;
+        transition: 0.3s;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(26, 26, 46, 0.15);
+    }
+    .btn-auth-primary:hover {
+        background: #e53935;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(229, 57, 53, 0.2);
+    }
+
+    .auth-footer { text-align: center; margin-top: 35px; border-top: 1px solid #f1f3f5; pt: 25px; font-size: 0.9rem; }
+    .auth-footer a { color: #e53935; font-weight: 700; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+
+    .reg-options { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+    .btn-reg-alt {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #eee;
+        color: #1a1a2e;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: 0.2s;
+        text-decoration: none !important;
+    }
+    .btn-reg-alt:hover { background: #f8f9fa; border-color: #adb5bd; }
+</style>
+
+<div class="auth-page-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Welcome <span>Back</span></h2>
+            <p>Ready for your next great adventure?</p>
         </div>
-        <div class="inner-sec-w3layouts-agileinfo">
-          <div class="contact_grid_right mt-5">
-            <div class="contact_left_grid">
-              <input type="email" name="email" placeholder="Email" required="" />
-              <input type="password" name="password" id="password" placeholder="password" required="" />
-              <input type="submit"  value="Login" />
-              {% comment %} <input type="reset" value="Clear" /> {% endcomment %}
-              <div class="clearfix"></div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group-premium">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" class="form-control-premium" placeholder="Email Address" required>
             </div>
-          </div>
+
+            <div class="form-group-premium">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" class="form-control-premium" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="btn-auth-primary">Secure Login</button>
+        </form>
+
+        <div class="auth-footer">
+            <p class="text-muted mb-2">New to the community?</p>
+            <div class="reg-options">
+                <a href="/register_user" class="btn-reg-alt">Register as a Rider</a>
+                <a href="/register_club" class="btn-reg-alt">Register a Riding Club</a>
+                <a href="/register_shop" class="btn-reg-alt">Join as a Shop Partner</a>
+            </div>
         </div>
-      </div>
-    </section>
-  </form>
+    </div>
+</div>
 {% endblock %}
