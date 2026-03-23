@@ -3,33 +3,132 @@
 {% block content %}
 {% for message in messages %} 
 	<script>alert('{{ message }}');</script>   
- {% endfor %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="contact py-lg-5">
-       <div class="container py-5">
-           <div class="title-section pb-sm-5 pb-3">
-              <h2 class="heading-agileinfo text-center pb-4">add<span> sale products</span></h2>
-           </div>
-           <div class="inner-sec-w3layouts-agileinfo">
-               <div class="contact_grid_right mt-5">
-                       <div class="contact_left_grid">
-                            <input type="text" name="productname"  placeholder="Product name" >
-                            <!-- <input type="email" name="email" id="email" placeholder="email id" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                            <input  type="password" name="password" id="password" placeholder="password" required="" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character."> -->
-                            <input type="tel" name="price"  placeholder="Price"  required>
-                            <input type="file" name="image" placeholder="Image"  required>
-                            <input type="number" name="stock"  placeholder="Stock" min="0" max="{{stock}}" required>
-                            
-                            <input type="submit" value="Add">
-                            <input type="reset" value="Clear">
-                            </div>
-                        </div>
+{% endfor %}
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto 100px;
+    }
+    .premium-form-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+    }
+    .form-header { text-align: center; margin-bottom: 40px; }
+    .form-header h2 { font-weight: 800; font-size: 2rem; color: #1a1a2e; }
+    .form-header h2 span { color: #e53935; }
+    
+    .form-group { margin-bottom: 25px; }
+    .form-group label {
+        display: block;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .form-control-premium {
+        width: 100%;
+        padding: 15px 20px;
+        background: #fcfcfc;
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    .form-control-premium:focus {
+        outline: none;
+        border-color: #e53935;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(229, 57, 53, 0.05);
+    }
+
+    .custom-file-upload {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        background: #fdf2f2;
+        border: 2px dashed #e53935;
+        border-radius: 12px;
+        text-align: center;
+        color: #e53935;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .custom-file-upload:hover { background: #feebeb; }
+    .file-selected { border-style: solid; border-color: #2e7d32; color: #2e7d32; background: #e8f5e9; }
+
+    .btn-add-product {
+        width: 100%;
+        padding: 16px;
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-top: 30px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-add-product:hover { background: #e53935; transform: translateY(-2px); }
+</style>
+
+<div class="form-container">
+    <div class="premium-form-card">
+        <div class="form-header">
+            <h2>Add New <span>Product</span></h2>
+            <p class="text-muted">List a new item in your store's catalog</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" name="productname" class="form-control-premium" placeholder="e.g. Premium Leather Riding Gloves" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Price (₹)</label>
+                        <input type="number" name="price" class="form-control-premium" placeholder="1999" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Initial Stock</label>
+                        <input type="number" name="stock" class="form-control-premium" placeholder="10" min="0" required>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file" name="image" id="productImg" style="display: none;" required onchange="updateFileName(this)">
+                <label for="productImg" class="custom-file-upload" id="fileLabel">
+                    <i class="fas fa-camera mr-2"></i> Upload Product Photo
+                </label>
+            </div>
+
+            <button type="submit" class="btn-add-product">Add to Inventory</button>
+        </form>
     </div>
 </div>
-</form>
+
+<script>
+    function updateFileName(input) {
+        var label = document.getElementById('fileLabel');
+        if (input.files && input.files.length > 0) {
+            label.innerHTML = '<i class="fas fa-check-circle mr-2"></i> ' + input.files[0].name;
+            label.classList.add('file-selected');
+        }
+    }
+</script>
 {% endblock %}
