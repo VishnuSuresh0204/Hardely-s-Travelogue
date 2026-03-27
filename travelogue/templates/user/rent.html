@@ -188,7 +188,7 @@
       <!-- Product Image -->
       <div class="rent-card-img-wrap">
         {% if data.images %}
-          <img src="{{ data.images.url }}" alt="{{ data.productname }}">
+          <img src="{{ data.images.url }}" alt="{{ data.productname }}" class="img-zoomable" onclick="openImageModal(this.src)">
         {% else %}
           <img src="{% static 'images/default-product.jpg' %}" alt="No image">
         {% endif %}

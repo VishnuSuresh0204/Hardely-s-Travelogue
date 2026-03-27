@@ -3,57 +3,60 @@
 {% block content %}
 
 <style>
-  /* ── Page Hero ── */
   .history-hero {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 60px 32px;
     margin-bottom: 48px;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
-  .history-hero h2 {
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 12px;
+  .history-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(229,57,53,.2) 0%, transparent 70%);
+    border-radius: 50%;
   }
+  .history-hero h2 { font-size: 2.6rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
   .history-hero h2 span { color: #e53935; }
-  .history-hero p { color: rgba(255,255,255,.6); margin: 0; }
+  .history-hero p { color: rgba(255,255,255,.6); margin: 0; font-size: 1.05rem; }
 
-  /* ── History Table ── */
   .history-container {
     background: #fff;
     border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.04);
+    box-shadow: 0 4px 25px rgba(0,0,0,.05);
     overflow: hidden;
     margin-bottom: 80px;
     border: 1px solid #f0f0f0;
   }
-  
+
   .history-table { width: 100%; border-collapse: collapse; }
   .history-table th {
     background: #fcfcfc;
-    padding: 20px;
+    padding: 18px 22px;
     text-align: left;
     font-weight: 700;
     color: #1a1a2e;
     text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
+    font-size: 0.72rem;
+    letter-spacing: 1.2px;
     border-bottom: 2px solid #f0f0f0;
   }
   .history-table td {
-    padding: 20px;
-    border-bottom: 1px solid #f9f9f9;
+    padding: 20px 22px;
+    border-bottom: 1px solid #f8f8f8;
     vertical-align: middle;
     color: #444;
   }
+  .history-table tr:last-child td { border-bottom: none; }
+  .history-table tr:hover td { background: #fafafa; }
 
   .item-thumb {
-    width: 60px; height: 60px;
-    border-radius: 10px;
+    width: 64px; height: 64px;
+    border-radius: 12px;
     overflow: hidden;
     background: #f8f9fa;
   }
@@ -61,36 +64,56 @@
 
   .status-tag {
     display: inline-block;
-    padding: 6px 14px;
+    padding: 5px 14px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  .status-paid { background: #e8f5e9; color: #2e7d32; }
+  .status-paid { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+  .status-delivered { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
 
-  .price-col { font-weight: 700; color: #1a1a2e; }
-  .details-col div { line-height: 1.4; }
-  .date-col { color: #888; font-size: 0.9rem; }
+  .btn-feedback {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-fb-add  { background: #e3f2fd; color: #1565c0; }
+  .btn-fb-add:hover  { background: #1565c0; color: #fff; }
+  .btn-fb-edit { background: #fff8e1; color: #f57f17; margin-right: 4px; }
+  .btn-fb-edit:hover { background: #f57f17; color: #fff; }
+  .btn-fb-del  { background: #ffebee; color: #c62828; }
+  .btn-fb-del:hover  { background: #c62828; color: #fff; }
+  .fb-preview  { font-size: 0.8rem; color: #777; font-style: italic; margin-top: 5px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .price-col { font-weight: 800; color: #1a1a2e; font-size: 1.05rem; }
+  .product-name { font-weight: 700; color: #1a1a2e; font-size: 1rem; margin-bottom: 4px; }
+  .date-meta { font-size: 0.82rem; color: #888; line-height: 1.6; }
+  .date-meta i { color: #e53935; width: 14px; }
+
+  .empty-state { padding: 80px 20px; text-align: center; }
+  .empty-state i { font-size: 3.5rem; color: #ddd; display: block; margin-bottom: 20px; }
+  .empty-state p { color: #aaa; font-size: 1.05rem; margin-bottom: 20px; }
 
   @media (max-width: 768px) {
-    .history-table, .history-table thead, .history-table tbody, .history-table th, .history-table td, .history-table tr { 
-        display: block; 
-    }
     .history-table thead { display: none; }
+    .history-table, .history-table tbody, .history-table tr, .history-table td { display: block; width: 100%; }
     .history-table td { text-align: right; padding-left: 50%; position: relative; border-bottom: 1px solid #eee; }
-    .history-table td:before { 
-        content: attr(data-label); 
-        position: absolute; left: 20px; 
-        font-weight: 700; color: #1a1a2e; 
-    }
+    .history-table td:before { content: attr(data-label); position: absolute; left: 20px; font-weight: 700; color: #1a1a2e; }
     .item-thumb { margin-left: auto; }
   }
 </style>
 
 <div class="history-hero">
   <h2>Rental <span>History</span></h2>
-  <p>Tracking your past rides and gear rentals</p>
+  <p>Your completed and delivered rental records</p>
 </div>
 
 <div class="container pb-5">
@@ -99,39 +122,59 @@
     <table class="history-table">
       <thead>
         <tr>
-          <th>Gear</th>
+          <th>Vehicle</th>
           <th>Ride Details</th>
           <th>Total Paid</th>
           <th>Status</th>
+          <th>Feedback</th>
         </tr>
       </thead>
       <tbody>
         {% for data in rentcart %}
         <tr>
-          <td data-label="Gear">
+          <td data-label="Vehicle">
             <div class="item-thumb">
               {% if data.product.images %}
                 <img src="{{ data.product.images.url }}" alt="{{ data.product.productname }}">
               {% endif %}
             </div>
           </td>
-          <td data-label="Ride Details" class="details-col">
-            <div class="font-weight-bold" style="color:#1a1a2e">{{ data.product.productname }}</div>
-            <div class="small text-muted"><i class="far fa-calendar-alt"></i> {{ data.rented_date }} to {{ data.return_date }}</div>
-            <div class="small text-muted"><i class="far fa-clock"></i> Duration: {{ data.days }} days</div>
+          <td data-label="Ride Details">
+            <div class="product-name">{{ data.product.productname }}</div>
+            <div class="date-meta">
+              <i class="fas fa-calendar-alt"></i> {{ data.rented_date }} &rarr; {{ data.return_date }}<br>
+              <i class="fas fa-clock"></i> {{ data.days }} day{{ data.days|pluralize }}<br>
+              <i class="fas fa-store"></i> {{ data.product.club_name.clubname }}
+            </div>
           </td>
-          <td data-label="Total Paid" class="price-col">₹{{ data.total }}</td>
+          <td data-label="Total Paid" class="price-col">&#8377;{{ data.total }}</td>
           <td data-label="Status">
-            <span class="status-tag status-paid">{{ data.status }}</span>
+            {% if data.status == 'delivered' %}
+              <span class="status-tag status-delivered"><i class="fas fa-check-circle mr-1"></i> Delivered</span>
+            {% else %}
+              <span class="status-tag status-paid"><i class="fas fa-wallet mr-1"></i> Paid</span>
+            {% endif %}
+          </td>
+          <td data-label="Feedback">
+            {% if data.feedback %}
+              <div class="fb-preview">"{{ data.feedback.feedback|truncatechars:40 }}"</div>
+              <a href="/editfeedback?id={{ data.feedback.id }}" class="btn-feedback btn-fb-edit"><i class="fas fa-edit mr-1"></i>Edit</a>
+              <a href="/deletefeedback?id={{ data.feedback.id }}" class="btn-feedback btn-fb-del" onclick="return confirm('Delete this feedback?')"><i class="fas fa-trash"></i></a>
+            {% elif data.return_date < today %}
+              <a href="/addfeedback?rent_cart_id={{ data.id }}" class="btn-feedback btn-fb-add"><i class="fas fa-comment mr-1"></i>Add Feedback</a>
+            {% else %}
+              <span class="text-muted small"><i class="fas fa-lock mr-1"></i>After {{ data.return_date }}</span>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     {% else %}
-    <div class="text-center py-5">
-      <i class="fas fa-history text-muted mb-3 d-block" style="font-size: 3rem; opacity: 0.3;"></i>
-      <p class="text-muted">No rental history found.</p>
+    <div class="empty-state">
+      <i class="fas fa-history"></i>
+      <p>No rental history yet.</p>
+      <a href="/rent" class="btn btn-outline-danger">Browse Rentals</a>
     </div>
     {% endif %}
   </div>

@@ -160,11 +160,24 @@ def acceptapproval(request):
     id=request.GET.get('id')
 
     if status=='1':
+        # Approve: activate the login account
         Login.objects.filter(id=id).update(is_active=1)
-        messages.info(request,'approved')
-    else:
+        messages.success(request,'Club approved successfully')
+    elif status=='0':
+        # Reject pending club: delete the login user (cascades to register_club)
+        try:
+            Login.objects.filter(id=id).delete()
+            messages.warning(request,'Club registration rejected and deleted')
+        except Exception as e:
+            messages.error(request, f'Error deleting club: {e}')
+    elif status=='block':
+        # Block an approved club
         Login.objects.filter(id=id).update(is_active=0)
-        messages.info(request,'rejected')
+        messages.info(request,'Club blocked')
+    elif status=='unblock':
+        # Unblock a blocked club
+        Login.objects.filter(id=id).update(is_active=1)
+        messages.info(request,'Club unblocked')
     return HttpResponseRedirect('/clubapprove')
 
 
@@ -173,11 +186,24 @@ def acceptapprovalshop(request):
     id=request.GET.get('id')
 
     if status=='1':
+        # Approve: activate the login account
         Login.objects.filter(id=id).update(is_active=1)
-        messages.info(request,'approved')
-    else:
+        messages.success(request,'Shop approved successfully')
+    elif status=='0':
+        # Reject pending shop: delete the login user (cascades to register_shop)
+        try:
+            Login.objects.filter(id=id).delete()
+            messages.warning(request,'Shop registration rejected and deleted')
+        except Exception as e:
+            messages.error(request, f'Error deleting shop: {e}')
+    elif status=='block':
+        # Block an approved shop
         Login.objects.filter(id=id).update(is_active=0)
-        messages.info(request,'rejected')
+        messages.info(request,'Shop blocked')
+    elif status=='unblock':
+        # Unblock a blocked shop
+        Login.objects.filter(id=id).update(is_active=1)
+        messages.info(request,'Shop unblocked')
     return HttpResponseRedirect('/shopapprove')
                                              
 
@@ -380,19 +406,17 @@ def rentcart(request):
     uid = request.session['uid']
     oid=""
     user = Register_user.objects.get(user_login=uid)
-    # Get all status items for this user
-    cart=Rentcart.objects.filter(order__user_login=user)
+    # Only show active (non-completed) cart items
+    cart=Rentcart.objects.filter(order__user_login=user).exclude(status__in=["paid", "delivered"])
     try:
         # Get active order (not paid yet)
-        order=Rentorder.objects.filter(user_login=user).exclude(status="paid").last()
+        order=Rentorder.objects.filter(user_login=user).exclude(status__in=["paid", "delivered"]).last()
         if order:
             oid=order.id
         else:
             order=None
     except:
         order=None
-    print(order)
-    print(cart,"ioioioioppppppp")
     return render(request, 'user/rentcart.html',{"cart":cart,"oid":oid, "order":order})
 
 def deleterentcart(request):
@@ -738,14 +762,19 @@ def removeclub(request):
 def purchasehistory(request):
     uid=request.session['uid']
     user=Register_user.objects.get(user_login=uid)
-    buycart=Shopcart.objects.filter(status="paid",order_id__user_login_id=user.id)
+    # Only show items that are paid or delivered (completed)
+    buycart=Shopcart.objects.filter(status__in=["paid","delivered"],order__user_login=user).order_by('-id')
     return render(request,"user/purchasehistory.html",{"buycart":buycart})
 
 def renthistory(request):
     uid=request.session['uid']
     user=Register_user.objects.get(user_login=uid)
-    rentcart=Rentcart.objects.filter(status="paid",order_id__user_login_id=user.id)
-    return render(request,"user/renthistory.html",{"rentcart":rentcart})
+    rentcart=Rentcart.objects.filter(
+        status__in=["paid", "delivered"],
+        order__user_login=user
+    ).order_by('-id')
+    today = d.today().strftime('%Y-%m-%d')
+    return render(request,"user/renthistory.html",{"rentcart":rentcart, "today": today})
 
 def renthistoryclub(request):
     uid=request.session['uid']
@@ -857,7 +886,7 @@ def orderclub(request):
         product__club_name_id=club.id,
         return_date__gte=today
     )
-    return render(request, "club/orderclub.html", {"item": item})
+    return render(request, "club/orderclub.html", {"item": item, "today": today})
 
 def deliveryclub(request):
     id=request.GET.get("id")
@@ -887,18 +916,118 @@ def viewparticipants2(request):
     Participant=Participate.objects.filter(event_id=evnt) 
     return render(request,"club/viewparticipants2.html",{"participant":Participant})
 
-def addfeedback(request):   
-    uid=request.session["uid"]
-    user=Register_user.objects.get(user_login=uid)
+def addfeedback(request):
+    uid = request.session["uid"]
+    user = Register_user.objects.get(user_login=uid)
+    rent_cart_id = request.GET.get("rent_cart_id")
+    shop_cart_id = request.GET.get("shop_cart_id")
+
+    # Validate order belongs to user and is completed
+    rent_cart_item = None
+    shop_cart_item = None
+    existing_feedback = None
+
+    if rent_cart_id:
+        try:
+            rent_cart_item = Rentcart.objects.get(id=rent_cart_id, order__user_login=user, status__in=["paid","delivered"])
+            # Rental feedback only allowed AFTER return_date has passed
+            today_str = d.today().strftime('%Y-%m-%d')
+            if rent_cart_item.return_date and rent_cart_item.return_date >= today_str:
+                messages.error(request, "You can only leave feedback after your rental period has ended.")
+                return redirect("/renthistory")
+            existing_feedback = Feedback.objects.filter(rent_cart=rent_cart_item).first()
+        except Rentcart.DoesNotExist:
+            messages.error(request, "Invalid or incomplete rental order.")
+            return redirect("/renthistory")
+
+    elif shop_cart_id:
+        try:
+            # Shop feedback only allowed AFTER the shop marks the item as delivered
+            shop_cart_item = Shopcart.objects.get(id=shop_cart_id, order__user_login=user, status="delivered")
+            existing_feedback = Feedback.objects.filter(shop_cart=shop_cart_item).first()
+        except Shopcart.DoesNotExist:
+            messages.error(request, "Feedback can only be submitted after the product has been delivered.")
+            return redirect("/purchasehistory")
+    else:
+        messages.error(request, "No order specified.")
+        return redirect("/renthistory")
+
+    if existing_feedback:
+        messages.info(request, "You have already left feedback for this order. You can edit it below.")
+        return redirect(f"/editfeedback?id={existing_feedback.id}")
+
     if request.POST:
-        fb=request.POST["feedback"]
-        feedback=Feedback.objects.create(feedback=fb,user=user)
-        messages.info(request,"Feedback posted successfully")
-    return render(request,"user/addfeedback.html")
+        fb_text = request.POST.get("feedback", "").strip()
+        if fb_text:
+            Feedback.objects.create(
+                user=user,
+                feedback=fb_text,
+                rent_cart=rent_cart_item,
+                shop_cart=shop_cart_item,
+            )
+            messages.success(request, "Feedback posted successfully!")
+            return redirect("/renthistory" if rent_cart_item else "/purchasehistory")
+        else:
+            messages.error(request, "Feedback cannot be empty.")
+
+    context = {
+        "rent_cart_item": rent_cart_item,
+        "shop_cart_item": shop_cart_item,
+        "rent_cart_id": rent_cart_id,
+        "shop_cart_id": shop_cart_id,
+    }
+    return render(request, "user/addfeedback.html", context)
+
+
+def editfeedback(request):
+    uid = request.session["uid"]
+    user = Register_user.objects.get(user_login=uid)
+    id = request.GET.get("id")
+    try:
+        fb = Feedback.objects.get(id=id, user=user)
+    except Feedback.DoesNotExist:
+        messages.error(request, "Feedback not found.")
+        return redirect("/renthistory")
+
+    if request.POST:
+        fb_text = request.POST.get("feedback", "").strip()
+        if fb_text:
+            fb.feedback = fb_text
+            fb.save()
+            messages.success(request, "Feedback updated successfully!")
+            return redirect("/renthistory" if fb.rent_cart else "/purchasehistory")
+        else:
+            messages.error(request, "Feedback cannot be empty.")
+
+    return render(request, "user/editfeedback.html", {"fb": fb})
+
+
+def deletefeedback(request):
+    uid = request.session["uid"]
+    user = Register_user.objects.get(user_login=uid)
+    id = request.GET.get("id")
+    try:
+        fb = Feedback.objects.get(id=id, user=user)
+        was_rent = fb.rent_cart is not None
+        fb.delete()
+        messages.success(request, "Feedback deleted.")
+        return redirect("/renthistory" if was_rent else "/purchasehistory")
+    except Feedback.DoesNotExist:
+        messages.error(request, "Feedback not found.")
+        return redirect("/renthistory")
+
 
 def viewfeedback(request):
-    fb=Feedback.objects.all()
-    return render(request,"admin/viewfeedback.html",{"fb":fb})
+    fb = Feedback.objects.all().order_by('-id')
+    return render(request, "admin/viewfeedback.html", {"fb": fb})
+
+
+def userfeedback(request):
+    uid = request.session['uid']
+    user = Register_user.objects.get(user_login=uid)
+    feedbacks = Feedback.objects.filter(user=user).order_by('-id')
+    return render(request, "user/userfeedback.html", {"feedbacks": feedbacks})
+
 
 def viewriders(request):
     user=Register_user.objects.all()

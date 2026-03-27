@@ -121,7 +121,7 @@
   <div class="inventory-card">
     <div class="vehicle-img">
       {% if data.images %}
-        <img src="{{ data.images.url }}" alt="Vehicle" id="preview-{{ data.id }}">
+        <img src="{{ data.images.url }}" alt="Vehicle" id="preview-{{ data.id }}" class="img-zoomable" onclick="openImageModal(this.src)">
       {% endif %}
     </div>
     <div class="card-body-premium">

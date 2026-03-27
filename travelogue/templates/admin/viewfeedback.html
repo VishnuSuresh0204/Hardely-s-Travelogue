@@ -13,93 +13,282 @@
     text-align: center;
     color: #fff;
     margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .admin-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(229,57,53,.2) 0%, transparent 70%);
+    border-radius: 50%;
   }
   .admin-hero h2 { font-weight: 800; font-size: 2.4rem; margin-bottom: 10px; }
   .admin-hero h2 span { color: #e53935; }
+  .admin-hero p { opacity: 0.7; margin: 0; }
 
-  .feedback-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 25px;
-    margin-bottom: 50px;
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
   }
-  
-  .feedback-card {
+  .stat-pill {
     background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    border: 1px solid #eee;
-    position: relative;
-    transition: transform 0.3s;
-  }
-  .feedback-card:hover { transform: translateY(-5px); }
-  .feedback-card::before {
-    content: '\f10d';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    position: absolute;
-    top: 20px; right: 25px;
-    font-size: 2rem;
-    color: #f0f0f0;
-    z-index: 0;
-  }
-
-  .rider-info { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; position: relative; z-index: 1; }
-  .rider-avatar {
-    width: 45px; height: 45px;
-    background: #1a1a2e;
-    color: #fff;
-    border-radius: 50%;
+    border-radius: 12px;
+    padding: 14px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    border: 1px solid #f0f0f0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1.1rem;
+    gap: 10px;
   }
-  .rider-name { font-weight: 700; color: #1a1a2e; font-size: 1.05rem; }
-  .rider-handle { font-size: 0.8rem; color: #e53935; display: block; }
+  .stat-pill i { font-size: 1.2rem; }
+  .stat-pill .n { font-size: 1.4rem; font-weight: 800; color: #1a1a2e; }
+  .stat-pill .l { font-size: 0.78rem; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  .feedback-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
-    font-style: italic;
-    position: relative;
-    z-index: 1;
+  /* Table layout */
+  .fb-table-wrap {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.05);
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    margin-bottom: 60px;
   }
+  .fb-table { width: 100%; border-collapse: collapse; }
+  .fb-table th {
+    background: #fcfcfc;
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  .fb-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #f8f8f8;
+    vertical-align: middle;
+    color: #444;
+    font-size: 0.92rem;
+  }
+  .fb-table tr:last-child td { border-bottom: none; }
+  .fb-table tr:hover td { background: #fafafa; }
+
+  /* User cell */
+  .user-cell { display: flex; align-items: center; gap: 12px; }
+  .user-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-name { font-weight: 700; color: #1a1a2e; font-size: 0.95rem; }
+  .user-email { font-size: 0.78rem; color: #999; }
+
+  /* Order type badge */
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .badge-rental  { background: #e3f2fd; color: #1565c0; }
+  .badge-product { background: #e8f5e9; color: #2e7d32; }
+
+  /* Order detail cell */
+  .order-cell .product-name { font-weight: 700; color: #1a1a2e; font-size: 0.95rem; margin-bottom: 3px; }
+  .order-cell .order-meta   { font-size: 0.8rem; color: #888; line-height: 1.6; }
+  .order-cell .order-meta i { color: #e53935; width: 14px; }
+
+  /* Source cell (shop/club) */
+  .source-cell .src-name { font-weight: 700; color: #1a1a2e; font-size: 0.9rem; }
+  .source-cell .src-meta { font-size: 0.8rem; color: #aaa; }
+
+  /* Feedback text */
+  .fb-quote {
+    border-left: 3px solid #e53935;
+    padding-left: 12px;
+    font-style: italic;
+    color: #555;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  /* Item image */
+  .item-thumb {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f4f4f4;
+    flex-shrink: 0;
+  }
+  .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .date-tag { font-size: 0.78rem; color: #bbb; }
+
+  .empty-state { text-align: center; padding: 70px 20px; }
+  .empty-state i { font-size: 3rem; color: #ddd; display: block; margin-bottom: 16px; }
+  .empty-state p { color: #bbb; }
 </style>
 
 <div class="admin-hero">
-  <h2>Rider <span>Feedbacks</span></h2>
-  <p>Listen to what our community members are saying.</p>
+  <h2>Community <span>Feedbacks</span></h2>
+  <p>Complete feedback details — users, orders, and source entities</p>
 </div>
 
-<div class="feedback-grid">
-  {% for data in fb %}
-  <div class="feedback-card">
-    <div class="rider-info">
-      <div class="rider-avatar">
-        {% if data.user.images %}
-          <img src="{{ data.user.images.url }}" alt="Rider" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-        {% else %}
-          {{ data.user.ridername|first|upper }}
-        {% endif %}
-      </div>
-      <div>
-        <span class="rider-name">{{ data.user.ridername }}</span>
-        <span class="rider-handle">Verified Rider</span>
-      </div>
-    </div>
-    <div class="feedback-text">
-      "{{ data.feedback }}"
+<div class="stats-bar">
+  <div class="stat-pill">
+    <i class="fas fa-comments" style="color:#e53935;"></i>
+    <div>
+      <div class="n">{{ fb|length }}</div>
+      <div class="l">Total</div>
     </div>
   </div>
-  {% endfor %}
-  {% if not fb %}
-  <div class="col-12 text-center py-5 text-muted">
-    <i class="fas fa-comment-slash fa-3x mb-3 d-block" style="opacity: 0.2"></i>
-    No feedbacks received yet.
+  <div class="stat-pill">
+    <i class="fas fa-motorcycle" style="color:#1565c0;"></i>
+    <div>
+      <div class="n">{% with fb|length as t %}{{ fb|length }}{% endwith %}</div>
+      <div class="l">Rentals &amp; Products</div>
+    </div>
+  </div>
+</div>
+
+<div class="fb-table-wrap">
+  {% if fb %}
+  <table class="fb-table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Order</th>
+        <th>Source (Shop / Club)</th>
+        <th>Feedback</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in fb %}
+      <tr>
+
+        {# ── USER COLUMN ── #}
+        <td>
+          <div class="user-cell">
+            <div class="user-avatar">
+              {% if data.user.images %}
+                <img src="{{ data.user.images.url }}" alt="{{ data.user.ridername }}">
+              {% else %}
+                {{ data.user.ridername|first|upper }}
+              {% endif %}
+            </div>
+            <div>
+              <div class="user-name">{{ data.user.ridername }}</div>
+              <div class="user-email">{{ data.user.user_login.username }}</div>
+            </div>
+          </div>
+        </td>
+
+        {# ── ORDER COLUMN ── #}
+        <td>
+          {% if data.rent_cart %}
+            <div class="order-cell">
+              <div class="type-badge badge-rental"><i class="fas fa-motorcycle"></i> Rental</div>
+              <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+                {% if data.rent_cart.product.images %}
+                  <div class="item-thumb"><img src="{{ data.rent_cart.product.images.url }}" alt="bike"></div>
+                {% endif %}
+                <div>
+                  <div class="product-name">{{ data.rent_cart.product.productname }}</div>
+                  <div class="order-meta">
+                    <i class="fas fa-calendar-alt"></i> {{ data.rent_cart.rented_date }} &rarr; {{ data.rent_cart.return_date }}<br>
+                    <i class="fas fa-clock"></i> {{ data.rent_cart.days }} day{{ data.rent_cart.days|pluralize }} &bull;
+                    <i class="fas fa-rupee-sign"></i> {{ data.rent_cart.total }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          {% elif data.shop_cart %}
+            <div class="order-cell">
+              <div class="type-badge badge-product"><i class="fas fa-shopping-bag"></i> Purchase</div>
+              <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+                {% if data.shop_cart.product.images %}
+                  <div class="item-thumb"><img src="{{ data.shop_cart.product.images.url }}" alt="product"></div>
+                {% endif %}
+                <div>
+                  <div class="product-name">{{ data.shop_cart.product.productname }}</div>
+                  <div class="order-meta">
+                    <i class="fas fa-boxes"></i> Qty: {{ data.shop_cart.quantity }}<br>
+                    <i class="fas fa-rupee-sign"></i> {{ data.shop_cart.total }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+
+        {# ── SOURCE COLUMN (Shop or Club) ── #}
+        <td>
+          {% if data.rent_cart %}
+            <div class="source-cell">
+              <div class="type-badge badge-rental" style="margin-bottom:6px;"><i class="fas fa-flag"></i> Club</div>
+              <div class="src-name">{{ data.rent_cart.product.club_name.clubname }}</div>
+              <div class="src-meta"><i class="fas fa-map-marker-alt mr-1"></i>{{ data.rent_cart.product.club_name.location }}</div>
+              <div class="src-meta"><i class="fas fa-envelope mr-1"></i>{{ data.rent_cart.product.club_name.email }}</div>
+            </div>
+
+          {% elif data.shop_cart %}
+            <div class="source-cell">
+              <div class="type-badge badge-product" style="margin-bottom:6px;"><i class="fas fa-store"></i> Shop</div>
+              <div class="src-name">{{ data.shop_cart.product.shop_name.shopname }}</div>
+              <div class="src-meta"><i class="fas fa-map-marker-alt mr-1"></i>{{ data.shop_cart.product.shop_name.location }}</div>
+              <div class="src-meta"><i class="fas fa-envelope mr-1"></i>{{ data.shop_cart.product.shop_name.email }}</div>
+            </div>
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+
+        {# ── FEEDBACK TEXT COLUMN ── #}
+        <td>
+          <div class="fb-quote">{{ data.feedback }}</div>
+        </td>
+
+        {# ── DATE COLUMN ── #}
+        <td>
+          {% if data.updated_at %}
+            <div class="date-tag"><i class="fas fa-clock mr-1"></i>{{ data.updated_at|date:"M d, Y" }}</div>
+          {% else %}
+            <span class="text-muted small">—</span>
+          {% endif %}
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-comment-slash"></i>
+    <p>No feedbacks submitted yet.</p>
   </div>
   {% endif %}
 </div>

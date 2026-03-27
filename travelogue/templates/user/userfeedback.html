@@ -1,0 +1,152 @@
+{% extends "user/commonpageuser.html" %}
+{% load static %}
+{% block content %}
+
+{% for message in messages %}
+  <script>alert('{{ message }}');</script>
+{% endfor %}
+
+<style>
+  .fb-hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 20px;
+    padding: 60px 32px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .fb-hero::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(229,57,53,.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .fb-hero h2 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+  .fb-hero h2 span { color: #e53935; }
+  .fb-hero p { color: rgba(255,255,255,.6); margin: 0; }
+
+  .fb-grid { display: flex; flex-direction: column; gap: 20px; margin-bottom: 80px; }
+
+  .fb-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    border: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+    transition: box-shadow 0.2s;
+  }
+  .fb-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+
+  .fb-order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .fb-order-badge.rent  { background: #e3f2fd; color: #1565c0; }
+  .fb-order-badge.shop  { background: #e8f5e9; color: #2e7d32; }
+
+  .fb-product-name { font-size: 1.05rem; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+  .fb-text {
+    font-size: 0.97rem;
+    color: #555;
+    line-height: 1.6;
+    font-style: italic;
+    border-left: 3px solid #e53935;
+    padding-left: 14px;
+    margin-top: 12px;
+  }
+  .fb-meta { font-size: 0.78rem; color: #bbb; margin-top: 10px; }
+
+  .fb-actions { display: flex; gap: 10px; }
+  .btn-fb {
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: 0.2s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .btn-fb-edit  { background: #fff8e1; color: #f57f17; }
+  .btn-fb-edit:hover  { background: #f57f17; color: #fff; }
+  .btn-fb-del   { background: #ffebee; color: #c62828; }
+  .btn-fb-del:hover   { background: #c62828; color: #fff; }
+
+  .empty-state { text-align: center; padding: 80px 20px; }
+  .empty-state i { font-size: 3.5rem; color: #ddd; display: block; margin-bottom: 20px; }
+  .empty-state p { color: #aaa; font-size: 1.05rem; margin-bottom: 20px; }
+</style>
+
+<div class="fb-hero">
+  <h2>My <span>Feedbacks</span></h2>
+  <p>Your reviews on rentals and purchases</p>
+</div>
+
+<div class="container pb-5">
+  {% if feedbacks %}
+  <div class="fb-grid">
+    {% for fb in feedbacks %}
+    <div class="fb-card">
+      <div>
+        {% if fb.rent_cart %}
+          <div class="fb-order-badge rent"><i class="fas fa-motorcycle"></i> Rental</div>
+          <div class="fb-product-name">{{ fb.rent_cart.product.productname }}</div>
+          <div class="text-muted small">
+            <i class="fas fa-calendar-alt mr-1"></i> {{ fb.rent_cart.rented_date }} &rarr; {{ fb.rent_cart.return_date }}
+            &bull; {{ fb.rent_cart.days }} day{{ fb.rent_cart.days|pluralize }}
+            &bull; {{ fb.rent_cart.product.club_name.clubname }}
+          </div>
+        {% elif fb.shop_cart %}
+          <div class="fb-order-badge shop"><i class="fas fa-shopping-bag"></i> Purchase</div>
+          <div class="fb-product-name">{{ fb.shop_cart.product.productname }}</div>
+          <div class="text-muted small">
+            <i class="fas fa-boxes mr-1"></i> Qty: {{ fb.shop_cart.quantity }}
+            &bull; &#8377;{{ fb.shop_cart.total }}
+          </div>
+        {% endif %}
+        <div class="fb-text">{{ fb.feedback }}</div>
+        {% if fb.updated_at %}
+          <div class="fb-meta"><i class="fas fa-clock mr-1"></i>Updated {{ fb.updated_at|date:"M d, Y" }}</div>
+        {% endif %}
+      </div>
+      <div class="fb-actions">
+        <a href="/editfeedback?id={{ fb.id }}" class="btn-fb btn-fb-edit">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="/deletefeedback?id={{ fb.id }}" class="btn-fb btn-fb-del"
+           onclick="return confirm('Delete this feedback? This cannot be undone.')">
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-comment-slash"></i>
+    <p>You haven't left any feedback yet.</p>
+    <a href="/renthistory" class="btn btn-outline-danger mr-2">Rental History</a>
+    <a href="/purchasehistory" class="btn btn-outline-secondary">Purchase History</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

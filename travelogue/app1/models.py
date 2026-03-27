@@ -113,7 +113,11 @@ class Participate(models.Model):
 class Feedback(models.Model):
     user=models.ForeignKey(Register_user,on_delete=models.CASCADE,null=True)
     feedback=models.CharField(max_length=10000,null=True)
-   
+    rent_cart=models.OneToOneField(Rentcart,on_delete=models.CASCADE,null=True,blank=True,related_name='feedback')
+    shop_cart=models.OneToOneField(Shopcart,on_delete=models.CASCADE,null=True,blank=True,related_name='feedback')
+    created_at=models.DateTimeField(auto_now_add=True,null=True)
+    updated_at=models.DateTimeField(auto_now=True,null=True)
+
 
 
 

@@ -115,6 +115,44 @@
     }
     .footer-text p { color: rgba(255,255,255,0.6); line-height: 1.8; }
     .contact-info h4 { color: var(--primary); font-size: 1rem; font-weight: 700; margin-top: 20px; }
+    /* ── Image Zoom Modal ── */
+    .img-zoomable { cursor: zoom-in; transition: opacity 0.3s; }
+    .img-zoomable:hover { opacity: 0.85; }
+
+    #imageModal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        backdrop-filter: blur(5px);
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+    }
+    #imageModal img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 8px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #imageModal.active { display: flex; }
+    #imageModal.active img { transform: scale(1); }
+    
+    .modal-close {
+        position: absolute;
+        top: 20px; right: 30px;
+        color: #fff;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+        transition: 0.3s;
+    }
+    .modal-close:hover { color: var(--primary); transform: rotate(90deg); }
 </style>
 </head>
 
@@ -197,6 +235,28 @@
             </div>
         </div>
     </footer>
+
+    <!-- Image Zoom Modal -->
+    <div id="imageModal" onclick="closeImageModal()">
+        <span class="modal-close">&times;</span>
+        <img id="modalImg" src="" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImg');
+            img.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 
     <script src='{% static "js/jquery-2.2.3.min.js" %}'></script>
     <script src='{% static "js/bootstrap.js" %}'></script>

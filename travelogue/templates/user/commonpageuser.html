@@ -31,6 +31,58 @@
     <!-- online-fonts -->
     <link href='{% static "//fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i" %}' rel="stylesheet">
     <!-- //online-fonts -->
+    <style>
+        /* ── Image Zoom Modal ── */
+        .img-zoomable { cursor: zoom-in !important; transition: opacity 0.3s; }
+        .img-zoomable:hover { opacity: 0.85; }
+
+        #imageModal {
+            display: none !important;
+            position: fixed !important;
+            z-index: 99999 !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: rgba(0,0,0,0.95) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        #imageModal.active {
+            display: flex !important;
+        }
+        #imageModal img {
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 12px;
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            object-fit: contain !important;
+        }
+        #imageModal.active img { transform: scale(1); }
+        
+        .modal-close {
+            position: fixed !important;
+            top: 20px !important;
+            right: 30px !important;
+            color: #fff;
+            font-size: 44px;
+            font-weight: 300;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 100000 !important;
+            transition: 0.3s;
+            user-select: none;
+        }
+        .modal-close:hover { color: #e53935; transform: rotate(90deg); }
+    </style>
 </head>
 
 <body>
@@ -87,7 +139,7 @@
                             </div>
                         </li>
 						<li class="nav-item mr-3 mt-lg-0 mt-3">
-                            <a class="nav-link" href="/addfeedback">Feedback</a>
+                            <a class="nav-link" href="/userfeedback">Feedback</a>
                         </li>
                         <li class="nav-item mr-3 mt-lg-0 mt-3">
                             <a class="nav-link" href="/userprofile">My profile</a>
@@ -202,6 +254,32 @@
 	<!-- Bootstrap core JavaScript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src='{% static "js/bootstrap.js" %}'></script>
+	    <!-- Image Zoom Modal -->
+    <div id="imageModal" onclick="closeImageModal()">
+        <span class="modal-close">&times;</span>
+        <img id="modalImg" src="" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        function openImageModal(src) {
+            var modal = document.getElementById('imageModal');
+            var img = document.getElementById('modalImg');
+            img.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = '0px';
+        }
+
+        function closeImageModal() {
+            var modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImageModal();
+        });
+    </script>
+    <script src='{% static "js/bootstrap.js" %}'></script>
 </body>
 </html>

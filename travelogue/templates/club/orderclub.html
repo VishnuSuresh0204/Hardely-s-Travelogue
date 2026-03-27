@@ -119,8 +119,10 @@
           <a href="{% if data.order.file %}{{ data.order.file.url }}{% endif %}" target="_blank" class="proof-link"><i class="fas fa-file-invoice mr-1"></i> View Proof</a>
         </td>
         <td class="text-right">
-          {% if data.status == 'paid' %}
+          {% if data.status == 'paid' and data.rented_date == today %}
             <a href="/deliveryclub?id={{data.id}}" class="btn-deliver">Mark as Delivered</a>
+          {% elif data.status == 'paid' %}
+            <span class="text-muted small font-weight-bold">Available on {{ data.rented_date }}</span>
           {% else %}
             <span class="text-muted small font-weight-bold">Awaiting Payment</span>
           {% endif %}

@@ -35,7 +35,7 @@
     border-radius: 12px;
     padding: 18px 22px;
     margin-bottom: 30px;
-    border-left: 4px solid #e53935;
+    border-left: 4px solid #f57f17;
   }
   .order-info-box .label { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .order-info-box .value { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
@@ -63,10 +63,10 @@
     margin-bottom: 24px;
     font-family: inherit;
   }
-  .feedback-textarea:focus { outline: none; border-color: #e53935; background: #fff; box-shadow: 0 5px 20px rgba(229,57,53,0.05); }
+  .feedback-textarea:focus { outline: none; border-color: #f57f17; background: #fff; box-shadow: 0 5px 20px rgba(245,127,23,0.08); }
 
-  .btn-post-feedback {
-    background: linear-gradient(135deg, #e53935, #c62828);
+  .btn-update-feedback {
+    background: linear-gradient(135deg, #f57f17, #e65100);
     color: #fff;
     border: none;
     padding: 16px;
@@ -74,49 +74,48 @@
     font-weight: 700;
     font-size: 1rem;
     width: 100%;
-    box-shadow: 0 6px 20px rgba(229,57,53,0.3);
+    box-shadow: 0 6px 20px rgba(245,127,23,0.3);
     cursor: pointer;
     transition: all 0.2s;
   }
-  .btn-post-feedback:hover { transform: translateY(-2px); opacity: 0.95; }
+  .btn-update-feedback:hover { transform: translateY(-2px); opacity: 0.95; }
+  .posted-at { font-size: 0.8rem; color: #bbb; text-align: right; margin-bottom: 15px; }
 </style>
 
 <div class="feedback-hero">
-  <h2>Share <span>Feedback</span></h2>
-  <p>Your experience helps build a better riding community</p>
+  <h2>Edit <span>Feedback</span></h2>
+  <p>Update your experience below</p>
 </div>
 
 <div class="container pb-5">
   <div class="feedback-container">
 
-    {% if rent_cart_item %}
+    {% if fb.rent_cart %}
     <div class="order-info-box">
       <div class="label">Rental Order</div>
-      <div class="value"><i class="fas fa-motorcycle mr-2 text-danger"></i>{{ rent_cart_item.product.productname }}</div>
-      <div class="text-muted small mt-1">{{ rent_cart_item.rented_date }} &rarr; {{ rent_cart_item.return_date }} &bull; {{ rent_cart_item.days }} day{{ rent_cart_item.days|pluralize }}</div>
+      <div class="value"><i class="fas fa-motorcycle mr-2" style="color:#f57f17"></i>{{ fb.rent_cart.product.productname }}</div>
+      <div class="text-muted small mt-1">{{ fb.rent_cart.rented_date }} &rarr; {{ fb.rent_cart.return_date }}</div>
     </div>
     {% endif %}
 
-    {% if shop_cart_item %}
+    {% if fb.shop_cart %}
     <div class="order-info-box">
       <div class="label">Purchase Order</div>
-      <div class="value"><i class="fas fa-shopping-bag mr-2 text-danger"></i>{{ shop_cart_item.product.productname }}</div>
-      <div class="text-muted small mt-1">Qty: {{ shop_cart_item.quantity }} &bull; &#8377;{{ shop_cart_item.total }}</div>
+      <div class="value"><i class="fas fa-shopping-bag mr-2" style="color:#f57f17"></i>{{ fb.shop_cart.product.productname }}</div>
+      <div class="text-muted small mt-1">Qty: {{ fb.shop_cart.quantity }}</div>
     </div>
+    {% endif %}
+
+    {% if fb.updated_at %}
+      <div class="posted-at">Last updated: {{ fb.updated_at|date:"M d, Y H:i" }}</div>
     {% endif %}
 
     <form method="post">
       {% csrf_token %}
-      {% if rent_cart_id %}
-        <input type="hidden" name="rent_cart_id" value="{{ rent_cart_id }}">
-      {% endif %}
-      {% if shop_cart_id %}
-        <input type="hidden" name="shop_cart_id" value="{{ shop_cart_id }}">
-      {% endif %}
       <label class="feedback-label">Your Experience</label>
-      <textarea name="feedback" class="feedback-textarea" placeholder="Share your experience — what did you love? Any suggestions?" required></textarea>
-      <button type="submit" class="btn-post-feedback">
-        <i class="fas fa-paper-plane mr-2"></i> Post Feedback
+      <textarea name="feedback" class="feedback-textarea" required>{{ fb.feedback }}</textarea>
+      <button type="submit" class="btn-update-feedback">
+        <i class="fas fa-save mr-2"></i> Update Feedback
       </button>
     </form>
 
