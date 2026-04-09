@@ -161,7 +161,7 @@ def acceptapproval(request):
 
     if status=='1':
         # Approve: activate the login account
-        Login.objects.filter(id=id).update(is_active=1)
+        Login.objects.filter(id=id).update(is_active=1, usertype='club')
         messages.success(request,'Club approved successfully')
     elif status=='0':
         # Reject pending club: delete the login user (cascades to register_club)
@@ -172,11 +172,11 @@ def acceptapproval(request):
             messages.error(request, f'Error deleting club: {e}')
     elif status=='block':
         # Block an approved club
-        Login.objects.filter(id=id).update(is_active=0)
+        Login.objects.filter(id=id).update(is_active=0, usertype='blocked_club')
         messages.info(request,'Club blocked')
     elif status=='unblock':
         # Unblock a blocked club
-        Login.objects.filter(id=id).update(is_active=1)
+        Login.objects.filter(id=id).update(is_active=1, usertype='club')
         messages.info(request,'Club unblocked')
     return HttpResponseRedirect('/clubapprove')
 
@@ -187,7 +187,7 @@ def acceptapprovalshop(request):
 
     if status=='1':
         # Approve: activate the login account
-        Login.objects.filter(id=id).update(is_active=1)
+        Login.objects.filter(id=id).update(is_active=1, usertype='shop')
         messages.success(request,'Shop approved successfully')
     elif status=='0':
         # Reject pending shop: delete the login user (cascades to register_shop)
@@ -198,11 +198,11 @@ def acceptapprovalshop(request):
             messages.error(request, f'Error deleting shop: {e}')
     elif status=='block':
         # Block an approved shop
-        Login.objects.filter(id=id).update(is_active=0)
+        Login.objects.filter(id=id).update(is_active=0, usertype='blocked_shop')
         messages.info(request,'Shop blocked')
     elif status=='unblock':
         # Unblock a blocked shop
-        Login.objects.filter(id=id).update(is_active=1)
+        Login.objects.filter(id=id).update(is_active=1, usertype='shop')
         messages.info(request,'Shop unblocked')
     return HttpResponseRedirect('/shopapprove')
                                              
