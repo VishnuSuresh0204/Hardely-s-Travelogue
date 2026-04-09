@@ -98,11 +98,7 @@
             <p>Register your riding club for official status</p>
         </div>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info py-2 small mb-4" style="border-radius: 10px;">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+
 
         <form method="post">
             {% csrf_token %}
