@@ -1,9 +1,7 @@
 {% extends "admin/commonpageadmin.html" %}
 {% load static %}
 {% block content %}
-{% for message in messages %} 
-	<script>alert('{{ message }}');</script>   
-{% endfor %}  
+  
 
 <style>
   .admin-hero {
@@ -116,8 +114,10 @@
         <td>
           {% if data.user_login.is_active == 1 %}
             <span class="status-badge badge-approved"><i class="fas fa-check-circle mr-1"></i>Approved</span>
+          {% elif data.user_login.usertype == 'blocked_club' %}
+            <span class="status-badge badge-blocked"><i class="fas fa-ban mr-1"></i>Blocked</span>
           {% else %}
-            <span class="status-badge badge-pending"><i class="fas fa-clock mr-1"></i>Pending / Blocked</span>
+            <span class="status-badge badge-pending"><i class="fas fa-clock mr-1"></i>Pending</span>
           {% endif %}
         </td>
         <td class="text-right">
@@ -128,19 +128,21 @@
                  onclick="return confirm('Block {{ data.clubname }}? They will be unable to login.')">
                 <i class="fas fa-ban mr-1"></i>Block
               </a>
-            {% else %}
-              {# Pending or Blocked: Approve or Delete #}
-              <a href="/acceptapproval?id={{ data.user_login.id }}&status=1" class="btn-action btn-approve"
-                 onclick="return confirm('Approve {{ data.clubname }}?')">
-                <i class="fas fa-check mr-1"></i>Approve
-              </a>
+            {% elif data.user_login.usertype == 'blocked_club' %}
+              {# Blocked: can Unblock #}
               <a href="/acceptapproval?id={{ data.user_login.id }}&status=unblock" class="btn-action btn-unblock"
                  onclick="return confirm('Unblock {{ data.clubname }}?')">
                 <i class="fas fa-unlock mr-1"></i>Unblock
               </a>
+            {% else %}
+              {# Pending: Approve or Reject #}
+              <a href="/acceptapproval?id={{ data.user_login.id }}&status=1" class="btn-action btn-approve"
+                 onclick="return confirm('Approve {{ data.clubname }}?')">
+                <i class="fas fa-check mr-1"></i>Approve
+              </a>
               <a href="/acceptapproval?id={{ data.user_login.id }}&status=0" class="btn-action btn-delete"
-                 onclick="return confirm('Permanently delete {{ data.clubname }}? This cannot be undone.')">
-                <i class="fas fa-trash mr-1"></i>Delete
+                 onclick="return confirm('Reject and permanently delete {{ data.clubname }}? This cannot be undone.')">
+                <i class="fas fa-times mr-1"></i>Reject
               </a>
             {% endif %}
           </div>

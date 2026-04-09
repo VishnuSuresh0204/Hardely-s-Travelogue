@@ -98,13 +98,7 @@
 </style>
 
 <div class="profile-container">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-info alert-popup shadow-sm" role="alert">
-                <i class="fas fa-info-circle mr-2"></i> {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+
 
     {% for data in shop %}
     <div class="profile-card">
