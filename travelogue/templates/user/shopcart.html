@@ -35,6 +35,7 @@
     align-items: center;
     gap: 25px;
     transition: transform .2s;
+    position: relative;
   }
   .cart-item:hover { transform: translateX(5px); }
 
@@ -66,18 +67,21 @@
   .cart-price-total { font-size: 1.25rem; font-weight: 800; color: #1a1a2e; }
 
   .btn-remove {
+    position: absolute;
+    top: 15px;
+    right: 15px;
     color: #e53935;
     background: #fff5f5;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: all .2s;
   }
-  .btn-remove:hover { background: #e53935; color: #fff; transform: scale(1.1); }
+  .btn-remove:hover { background: #e53935; color: #fff; transform: scale(1.1) rotate(90deg); }
 
   /* ── Summary ── */
   .cart-summary {
@@ -135,8 +139,17 @@
   {% if buycart %}
   <div class="row">
     <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="selectAll">
+          <label class="custom-control-label font-weight-bold" for="selectAll">Select All Items</label>
+        </div>
+      </div>
       {% for data in buycart %}
-      <div class="cart-item">
+      <div class="cart-item" data-id="{{ data.id }}" data-price="{{ data.total }}">
+        <div class="item-selector px-2">
+          <input type="checkbox" class="item-checkbox" value="{{ data.id }}" data-total="{{ data.total }}">
+        </div>
         <div class="cart-item-img">
           {% if data.product.images %}
             <img src="{{ data.product.images.url }}" alt="{{ data.product.productname }}">
@@ -145,7 +158,10 @@
         <div class="cart-item-details">
           <h4>{{ data.product.productname }}</h4>
           <p class="cart-item-meta">Shop: {{ data.product.shop_name.shopname }}</p>
-          <p class="mb-0"><strong>Qty:</strong> {{ data.quantity }}</p>
+          <div class="d-flex align-items-center gap-3">
+            <p class="mb-0"><strong>Qty:</strong> {{ data.quantity }}</p>
+            <a href="/shoppayment?cart_ids={{ data.id }}&id={{ oid }}" class="btn btn-sm btn-outline-success ml-3 py-1">Pay Now</a>
+          </div>
         </div>
         <div class="cart-item-pricing">
           <div class="cart-price-unit">₹{{ data.product.price }} each</div>
@@ -174,9 +190,21 @@
           <span>₹{{ order.total }}</span>
         </div>
         
-        <a href="/shoppayment?id={{ oid }}" class="btn-checkout">
+        <div id="selectedSummary" class="mt-4 p-3 rounded" style="background: rgba(255,255,255,0.05); display: none;">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="small opacity-75">Selected Items:</span>
+            <span id="selectedCount" class="font-weight-bold">0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="small opacity-75">Selected Total:</span>
+            <span id="selectedAmount" class="font-weight-bold text-danger">₹0</span>
+          </div>
+        </div>
+
+        <a href="/shoppayment?id={{ oid }}" id="checkoutBtn" class="btn-checkout">
           Proceed to Payment
         </a>
+        <p class="text-center mt-3 small opacity-50">Select items to pay for a subset of your cart.</p>
       </div>
     </div>
   </div>
@@ -188,5 +216,65 @@
   </div>
   {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('selectAll');
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    const selectedSummary = document.getElementById('selectedSummary');
+    const selectedCount = document.getElementById('selectedCount');
+    const selectedAmount = document.getElementById('selectedAmount');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const originalCheckoutHref = checkoutBtn.href;
+    const originalCheckoutText = checkoutBtn.innerText;
+
+    function updateSummary() {
+        let count = 0;
+        let total = 0;
+        let selectedIds = [];
+
+        itemCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                count++;
+                total += parseInt(cb.getAttribute('data-total'));
+                selectedIds.push(cb.value);
+            }
+        });
+
+        if (count > 0) {
+            selectedSummary.style.display = 'block';
+            selectedCount.innerText = count;
+            selectedAmount.innerText = '₹' + total;
+            
+            // Update checkout button
+            checkoutBtn.innerText = 'Pay Selected (₹' + total + ')';
+            checkoutBtn.href = '/shoppayment?id={{ oid }}&cart_ids=' + selectedIds.join(',');
+            checkoutBtn.classList.remove('btn-checkout');
+            checkoutBtn.classList.add('btn-pay-now'); // Reusing style if available or just keep btn-checkout
+            checkoutBtn.style.background = '#28a745'; // Green for selection
+        } else {
+            selectedSummary.style.display = 'none';
+            checkoutBtn.innerText = originalCheckoutText;
+            checkoutBtn.href = originalCheckoutHref;
+            checkoutBtn.style.background = '#e53935';
+        }
+
+        selectAll.checked = (count === itemCheckboxes.length && count > 0);
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            itemCheckboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+            updateSummary();
+        });
+    }
+
+    itemCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSummary);
+    });
+});
+</script>
 
 {% endblock %}

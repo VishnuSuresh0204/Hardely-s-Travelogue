@@ -32,9 +32,10 @@
     margin-bottom: 25px;
     border: 1px solid #f0f0f0;
     display: grid;
-    grid-template-columns: 100px 1fr auto auto;
+    grid-template-columns: auto 100px 1fr auto auto;
     align-items: center;
     gap: 30px;
+    position: relative;
   }
 
   .rent-item-img {
@@ -66,11 +67,21 @@
   .rent-total .val { font-size: 1.4rem; font-weight: 800; color: #1a1a2e; display: block; }
 
   .btn-remove-rent {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     color: #ccc;
-    transition: color 0.2s;
+    transition: all 0.2s;
     font-size: 1.1rem;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f8f9fa;
   }
-  .btn-remove-rent:hover { color: #e53935; }
+  .btn-remove-rent:hover { color: #fff; background: #e53935; transform: rotate(90deg); }
 
   /* ── Right Panel ── */
   .pay-card {
@@ -110,8 +121,8 @@
   .btn-pay-now:hover { opacity: 0.9; color: #fff; }
 
   @media (max-width: 992px) {
-    .rent-item { grid-template-columns: 100px 1fr; }
-    .rent-status, .rent-total { grid-column: span 2; }
+    .rent-item { grid-template-columns: auto 80px 1fr; gap: 15px; padding: 20px; }
+    .rent-status, .rent-total { grid-column: span 3; border-top: 1px solid #f8f9fa; padding-top: 10px; }
   }
 </style>
 
@@ -123,8 +134,21 @@
   {% if cart %}
   <div class="row">
     <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="selectAllRent">
+          <label class="custom-control-label font-weight-bold" for="selectAllRent">Select All Approved</label>
+        </div>
+      </div>
       {% for data in cart %}
-      <div class="rent-item">
+      <div class="rent-item" data-id="{{ data.id }}" data-price="{{ data.total }}" data-status="{{ data.status }}">
+        <div class="item-selector px-2">
+          {% if data.status == 'approved' %}
+            <input type="checkbox" class="rent-checkbox" value="{{ data.id }}" data-total="{{ data.total }}">
+          {% else %}
+            <input type="checkbox" disabled title="Wait for approval">
+          {% endif %}
+        </div>
         <div class="rent-item-img">
           {% if data.product.images %}
             <img src="{{ data.product.images.url }}" alt="{{ data.product.productname }}">
@@ -138,6 +162,9 @@
             <span><i class="fas fa-clock"></i> {{ data.days }} days</span><br>
             <span><i class="fas fa-store"></i> {{ data.product.club_name.clubname }}</span>
           </div>
+          {% if data.status == 'approved' %}
+            <a href="/rentpayment?cart_ids={{ data.id }}&id={{ oid }}" class="btn btn-sm btn-outline-success mt-2">Pay Now</a>
+          {% endif %}
         </div>
 
         <div>
@@ -149,11 +176,9 @@
           <span class="val">₹{{ data.total }}</span>
         </div>
         
-        <div>
-          <a href="/deleterentcart?id={{ data.id }}" class="btn-remove-rent">
-            <i class="fas fa-times"></i>
-          </a>
-        </div>
+        <a href="/deleterentcart?id={{ data.id }}" class="btn-remove-rent" title="Remove Request">
+          <i class="fas fa-times"></i>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -169,12 +194,26 @@
           <span class="amount">₹{{ order.total }}</span>
         </div>
         
+        <div id="selectedRentSummary" class="mt-4 p-3 rounded mb-4" style="background: rgba(255,255,255,0.05); display: none; border: 1px solid rgba(255,255,255,0.1);">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="small opacity-75">Selected:</span>
+            <span id="selectedRentCount" class="font-weight-bold">0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="small opacity-75">Payable Amount:</span>
+            <span id="selectedRentAmount" class="font-weight-bold text-danger">₹0</span>
+          </div>
+        </div>
+
         {% if order.status == 'approved' %}
-          <a href="/rentpayment?id={{ oid }}" class="btn-pay-now">
+          <a href="/rentpayment?id={{ oid }}" id="rentPayBtn" class="btn-pay-now">
             Pay & Secure Booking
           </a>
         {% else %}
-          <div class="text-center p-3 opacity-50" style="background: rgba(255,255,255,0.05); border-radius: 12px;">
+          <a href="#" id="rentPayBtn" class="btn-pay-now" style="display: none;">
+            Pay Selected
+          </a>
+          <div id="waitMsg" class="text-center p-3 opacity-50" style="background: rgba(255,255,255,0.05); border-radius: 12px;">
             <i class="fas fa-hourglass-half mb-2"></i><br>
             Wait for Approval
           </div>
@@ -187,11 +226,83 @@
   <div class="text-center py-5">
     <i class="fas fa-motorcycle text-muted mb-4 d-block" style="font-size: 4rem; opacity: 0.3;"></i>
     <h3 class="text-muted">No active rental items</h3>
-    <p class="text-muted small">Completed rentals are moved to your Rental History.</p>
-    <a href="/rent" class="btn btn-outline-danger mt-2 mr-2">Browse Rentals</a>
-    <a href="/renthistory" class="btn btn-outline-secondary mt-2">View Rental History</a>
+    <a href="/rent" class="btn btn-outline-danger mt-2">Browse Rentals</a>
   </div>
   {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('selectAllRent');
+    const itemCheckboxes = document.querySelectorAll('.rent-checkbox');
+    const selectedSummary = document.getElementById('selectedRentSummary');
+    const selectedCount = document.getElementById('selectedRentCount');
+    const selectedAmount = document.getElementById('selectedRentAmount');
+    const payBtn = document.getElementById('rentPayBtn');
+    const waitMsg = document.getElementById('waitMsg');
+    
+    const originalHref = payBtn ? payBtn.href : '';
+    const originalText = payBtn ? payBtn.innerText : '';
+
+    function updateRentSummary() {
+        if (!payBtn) return;
+        
+        let count = 0;
+        let total = 0;
+        let selectedIds = [];
+
+        itemCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                count++;
+                total += parseInt(cb.getAttribute('data-total'));
+                selectedIds.push(cb.value);
+            }
+        });
+
+        if (count > 0) {
+            selectedSummary.style.display = 'block';
+            selectedCount.innerText = count;
+            selectedAmount.innerText = '₹' + total;
+            
+            payBtn.style.display = 'block';
+            if (waitMsg) waitMsg.style.display = 'none';
+            
+            payBtn.innerText = 'Pay Selected (₹' + total + ')';
+            payBtn.href = '/rentpayment?id={{ oid }}&cart_ids=' + selectedIds.join(',');
+            payBtn.style.background = '#28a745';
+        } else {
+            selectedSummary.style.display = 'none';
+            
+            // If the whole order was approved, revert to original
+            {% if order.status == 'approved' %}
+                payBtn.style.display = 'block';
+                payBtn.innerText = originalText;
+                payBtn.href = originalHref;
+                payBtn.style.background = '#e53935';
+            {% else %}
+                payBtn.style.display = 'none';
+                if (waitMsg) waitMsg.style.display = 'block';
+            {% endif %}
+        }
+
+        if (selectAll) {
+            selectAll.checked = (count === itemCheckboxes.length && count > 0);
+        }
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            itemCheckboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+            updateRentSummary();
+        });
+    }
+
+    itemCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateRentSummary);
+    });
+});
+</script>
 
 {% endblock %}

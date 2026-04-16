@@ -308,28 +308,49 @@ def deleteshopcart(request):
 def shoppayment(request):
     uid = request.session['uid']
     user = Register_user.objects.get(user_login=uid)
-    print(user)
-    order=Shoporder.objects.get(user_login=user , status="pending")
-    print(order)
+    
+    order_id = request.GET.get('id')
+    cart_ids_str = request.GET.get('cart_ids')
+    
+    order = Shoporder.objects.get(id=order_id)
+    
+    selected_carts = None
+    display_total = order.total
+    
+    if cart_ids_str:
+        cart_ids = cart_ids_str.split(',')
+        selected_carts = Shopcart.objects.filter(id__in=cart_ids, order=order)
+        display_total = sum(item.total for item in selected_carts)
 
-    id = request.GET.get('id')
-    # print(id)
-    # order = Shoporder.objects.get(id=id)
     if request.POST:
-        order.status = "paid"
-        carts = Shopcart.objects.filter(order__id=id)
-        for c in carts:
-            pid = c.product.id
-            qty = c.quantity
-            product = Product_sell.objects.get(id=pid)
-            product.stock -= qty
-            product.save()
-            c.status = "paid"
-            c.save()
-        order.save()
-        messages.info(request,"Paid successfully")
+        if selected_carts:
+            for c in selected_carts:
+                product = c.product
+                product.stock -= c.quantity
+                product.save()
+                c.status = "paid"
+                c.save()
+            # If no more pending items in this order, mark order as paid
+            if not Shopcart.objects.filter(order=order, status="pending").exists():
+                order.status = "paid"
+                order.save()
+        else:
+            # Pay entire order
+            order.status = "paid"
+            carts = Shopcart.objects.filter(order=order)
+            for c in carts:
+                product = c.product
+                product.stock -= c.quantity
+                product.save()
+                c.status = "paid"
+                c.save()
+            order.save()
+            
+        messages.info(request, "Paid successfully")
         return redirect("/purchasehistory")
-    return render(request,"user/payment.html",{"order":order})
+        
+    context_order = {'total': display_total, 'id': order.id}
+    return render(request, "user/payment.html", {"order": context_order})
 
 def rent(request):
     rentcart=Product_rent.objects.all()
@@ -433,27 +454,55 @@ def deleterentcart(request):
 def rentpayment(request):
     uid = request.session['uid']
     user = Register_user.objects.get(user_login=uid)
-    print(user)
+    
+    order_id = request.GET.get('id')
+    cart_ids_str = request.GET.get('cart_ids')
+    
     try:
-        order=Rentorder.objects.get(user_login=user , status="approved")
-    except:
-        messages.error(request, "Order must be approved by the club before payment")
+        order = Rentorder.objects.get(id=order_id)
+    except Rentorder.DoesNotExist:
+        messages.error(request, "Order not found")
         return redirect("/rentcart")
-    print(order)
 
-    id = request.GET.get('id')
-    # print(id)
-    # order = Shoporder.objects.get(id=id)
+    selected_carts = None
+    display_total = order.total
+    
+    if cart_ids_str:
+        cart_ids = cart_ids_str.split(',')
+        selected_carts = Rentcart.objects.filter(id__in=cart_ids, order=order, status="approved")
+        if not selected_carts.exists():
+            messages.error(request, "No approved items selected for payment")
+            return redirect("/rentcart")
+        display_total = sum(item.total for item in selected_carts)
+    else:
+        # If no specific items, we assume full order payment but only if order is approved
+        if order.status != "approved":
+            messages.error(request, "Order must be approved by the club before payment")
+            return redirect("/rentcart")
+
     if request.POST:
-        order.status = "paid"
-        carts = Rentcart.objects.filter(order__id=id)
-        for c in carts:
-            c.status = "paid"
-            c.save()
-        order.save()
-        messages.info(request,"Paid successfully")
+        if selected_carts:
+            for c in selected_carts:
+                c.status = "paid"
+                c.save()
+            # If no more non-paid items in this order, mark order as paid
+            if not Rentcart.objects.filter(order=order).exclude(status__in=["paid", "delivered"]).exists():
+                order.status = "paid"
+                order.save()
+        else:
+            # Pay entire order
+            order.status = "paid"
+            carts = Rentcart.objects.filter(order=order)
+            for c in carts:
+                c.status = "paid"
+                c.save()
+            order.save()
+            
+        messages.info(request, "Paid successfully")
         return redirect("/renthistory")
-    return render(request,"user/rentpayment.html",{"order":order})
+        
+    context_order = {'total': display_total, 'id': order.id}
+    return render(request, "user/rentpayment.html", {"order": context_order})
 
 def approverent(request):
     uid=request.session["uid"]
